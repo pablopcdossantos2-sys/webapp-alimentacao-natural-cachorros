@@ -2,7 +2,11 @@
   "name": "prato-de-cao",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "check:contrast": "node scripts/check-contrast.mjs"
   }
 }
