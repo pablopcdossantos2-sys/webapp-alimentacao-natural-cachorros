@@ -47,7 +47,7 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - [ ] Revisar frequência/limite diário de fígado com profissional veterinário.
 - [ ] Resolver a inconsistência de preparo: `liver` permanece descrito como "Fígado bovino grelhado", embora o escopo da ferramenta fale em alimentos cozidos. Não alterar nome nem composição sem fonte.
 - [x] Preparar workflow de publicação estática pelo GitHub Actions.
-- [ ] Em `Settings > Pages`, selecionar `GitHub Actions` como fonte e confirmar a primeira implantação. A tentativa automática anterior falhou porque o Pages ainda não estava habilitado.
+- [x] Configurar GitHub Pages para publicação por GitHub Actions e concluir o primeiro deploy com sucesso (31/10/2026).
 - [ ] Resolver eventuais divergências de referência (NRC/FEDIAF/AAFCO/WSAVA) com fontes primárias.
 
 ## Notas de implementação e limites
@@ -57,7 +57,7 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - A seleção parcial mostra a fração não distribuída. A energia é omitida quando faltam grupos para evitar apresentar kcal parciais como total diário.
 - Os metadados de composição são explicitamente `source: null` e `verified: false`. Nenhuma fonte foi inferida.
 - O workflow de testes agora executa em `push` para `main` e em `pull_request` para `main`, rodando `npm test` e `npm run check:contrast`. O workflow de Pages só publica após push em `main` ou execução manual, e o deploy também repete as verificações.
-- A publicação está preparada por workflow, mas depende da seleção única de `GitHub Actions` em `Settings > Pages` e de uma execução bem-sucedida. O código está sob AGPL-3.0; a licença dos dados de composição continua sem comprovação.
+- GitHub Pages está configurado para publicação por Actions; a execução inicial do workflow `Deploy to GitHub Pages` concluiu com sucesso em 31/10/2026. O código está sob AGPL-3.0; a licença dos dados de composição continua sem comprovação.
 
 ## Novas páginas e interface
 
