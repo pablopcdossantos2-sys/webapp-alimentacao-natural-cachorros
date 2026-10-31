@@ -26,7 +26,7 @@ test("buildPlan preserves target and exposes missing group share",()=>{
   const full=buildPlan({weightKg:8,pct:4.5,groups:ingredientGroups,selectedIds:all,meals:2});
   assert.equal(full.targetGrams,360);assert.ok(Math.abs(full.totals.grams-360)<1e-8);assert.deepEqual(full.missingGroups,[]);
   const partial=buildPlan({weightKg:8,pct:4.5,groups:ingredientGroups,selectedIds:new Set(["chicken"]),meals:2});
-  assert.equal(partial.totals.grams,126);assert.deepEqual(partial.missingGroups,["Vísceras · 5%","Carboidratos · 35%","Vegetais · 25%"]);
+  assert.ok(Math.abs(partial.totals.grams-126)<1e-9);assert.deepEqual(partial.missingGroups,["Vísceras · 5%","Carboidratos · 35%","Vegetais · 25%"]);
 });
 test("profile validation rejects limits, puppy mismatch and invalid enums",()=>{
   const base={type:"adult",weightKg:8,meals:2,manualPct:null,neutered:"yes",activity:"moderate"};
