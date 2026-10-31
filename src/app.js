@@ -38,8 +38,10 @@ function syncPhase() {
   const puppy = phase.value === "puppy";
   $("#puppyFields").hidden = !puppy;
   $("#adultFields").hidden = puppy;
-  $("#puppyFields").querySelectorAll("input,select").forEach(control => { control.disabled = !puppy; });
-  $("#adultFields").querySelectorAll("input,select").forEach(control => { control.disabled = puppy; });
+  $("#puppyFields").querySelectorAll("input,select").forEach(control => { control.disabled = !puppy; control.required = puppy; });
+  $("#adultFields").querySelectorAll("input,select").forEach(control => { control.disabled = puppy; control.required = !puppy; });
+  fields.weightKg().required = true;
+  fields.meals().required = true;
   puppyNotice.hidden = !puppy;
 }
 phase.addEventListener("change", syncPhase);
