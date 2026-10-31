@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f7ef">
+<title>Prato de Cão — Calculadora educativa</title>
+<style>
+:root{color-scheme:light dark;--bg:#f5f7ef;--surface:#fff;--ink:#1d3026;--muted:#637368;--line:#dce5d8;--green:#286b48;--soft:#e8f1e6;--warn:#fff1d7;--warnink:#7b4c00}
+@media(prefers-color-scheme:dark){:root{--bg:#111a15;--surface:#1a261f;--ink:#eef6ed;--muted:#b2c2b4;--line:#33473a;--green:#8fd2a5;--soft:#263b2d;--warn:#3e301a;--warnink:#ffd78a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header,main,footer{max-width:980px;margin:auto;padding:1.1rem}header{padding-top:2rem}
+.brand{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;letter-spacing:-.04em;margin:.45rem 0 1rem}h2{font-size:1.2rem;margin:0 0 1rem}
+.lead{max-width:66ch;color:var(--muted)}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.2rem;box-shadow:0 6px 24px #142a1408}
+label{display:block;font-weight:650;margin:.8rem 0 .35rem}input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.65rem;width:100%}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:.2rem 1rem}.hint{font-size:.86rem;color:var(--muted)}
+fieldset{border:1px solid var(--line);border-radius:12px;margin:.8rem 0;padding:.6rem .8rem}legend{font-weight:750;padding:0 .3rem}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .6rem}.checks label{display:flex;align-items:flex-start;gap:.5rem;font-weight:450;margin:.25rem 0}.checks input{width:auto;margin-top:.3rem;accent-color:var(--green)}
+button{border:0;border-radius:12px;background:var(--green);color:white;padding:.85rem 1.2rem;font:inherit;font-weight:750;cursor:pointer;width:100%;margin-top:.6rem}
+.result{margin-top:1rem}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}.metric{background:var(--soft);border-radius:12px;padding:.8rem}.metric strong{display:block;font-size:1.25rem}.metric span{font-size:.8rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{text-align:left;padding:.55rem;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted)}.table-wrap{overflow-x:auto;margin:.7rem 0}
+.notice{background:var(--warn);color:var(--warnink);border-radius:12px;padding:.9rem;margin:.7rem 0}.notice strong{display:block}.small{font-size:.85rem;color:var(--muted)}
+footer{color:var(--muted);font-size:.85rem}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}.panel{padding:1rem}}
+@media(max-width:420px){.fields,.checks{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="brand">Prato de Cão · Ferramenta educativa</div><h1>Alimentação natural,<br>com mais clareza.</h1><p class="lead">Estime porções e macronutrientes de uma combinação de alimentos cozidos. Os valores são aproximados e não constituem prescrição nutricional.</p></header>
+<main>
+<div class="layout">
+<section class="panel"><h2>01 / Perfil do cão</h2>
+<form id="form">
+<div class="fields"><div><label for="phase">Fase</label><select id="phase"><option value="adult">Adulto</option><option value="puppy">Filhote</option></select></div><div><label for="weight">Peso (kg)</label><input id="weight" type="number" min=".5" max="120" step=".1" value="8" required></div></div>
+<div id="puppyFields" hidden class="fields"><div><label for="age">Idade (meses)</label><input id="age" type="number" min="2" max="24" value="4"></div><div><label for="adultWeight">Peso adulto esperado (kg)</label><input id="adultWeight" type="number" min="1" max="120" value="15"></div></div>
+<div id="adultFields" class="fields"><div><label for="neutered">Castração</label><select id="neutered"><option value="yes">Castrado(a)</option><option value="no">Não castrado(a)</option></select></div><div><label for="activity">Atividade</label><select id="activity"><option value="low">Baixa</option><option value="moderate" selected>Moderada</option><option value="high">Alta</option></select></div></div>
+<div class="fields"><div><label for="meals">Refeições por dia</label><select id="meals"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div><div><label for="manual">Percentual manual (%)</label><input id="manual" type="number" min="2" max="12" step=".1" placeholder="Opcional"></div></div>
+<p class="hint">O percentual é uma aproximação inicial baseada em faixas de peso/idade; necessidades individuais variam.</p>
+<h2 style="margin-top:1.3rem">02 / Ingredientes cozidos</h2><p class="hint">Selecione ao menos um alimento em cada grupo. A porção do grupo será dividida igualmente entre os itens selecionados.</p>
+<div id="ingredientGroups"></div><button type="submit">Calcular estimativa</button>
+</form></section>
+<section class="panel"><h2>03 / Resultado estimado</h2><div id="result" aria-live="polite"><p class="hint">Preencha o perfil e selecione ingredientes para ver o cálculo.</p></div></section>
+</div>
+<section class="panel result"><h2>Informações essenciais</h2><div class="notice"><strong>Suplementação é indispensável.</strong> Alimentação natural cozida sem ossos precisa de suplementação vitamínico-mineral adequada para ser completa. Esta calculadora não define doses de suplementos nem verifica todos os nutrientes.</div>
+<p>Use somente alimentos apropriados e devidamente cozidos. Não ofereça ossos cozidos. Cães com doenças crônicas, gestantes/lactantes, neonatos e casos que exigem manejo de peso precisam de avaliação veterinária individual.</p>
+<details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia, carambola e xilitol podem ser tóxicos para cães. Em caso de ingestão, procure atendimento veterinário.</p></details>
+<details><summary><strong>Transição alimentar</strong></summary><p>A mudança de alimentação deve ser planejada com profissional. Uma transição gradual pode reduzir desconfortos, mas o ritmo depende do animal e de sua condição clínica.</p></details></section>
+</main><footer>Estimativa educativa — não substitui médico-veterinário ou veterinário nutrólogo. Os resultados não devem ser interpretados como dieta completa e balanceada. Valores de composição e parâmetros exigem validação técnica e revisão das fontes antes de uso clínico.</footer>
+<script>
+const groups=[
+{key:"meat",name:"Carnes e proteínas · 35%",share:.35,items:[
+{id:"chicken",name:"Peito de frango cozido",p:31,g:3.6,c:0,f:0},
+{id:"beef",name:"Músculo bovino cozido",p:26.5,g:8.5,c:0,f:0},
+{id:"turkey",name:"Peru cozido",p:29,g:4,c:0,f:0},
+{id:"heart",name:"Coração de frango cozido",p:26.5,g:9,c:0,f:0},
+{id:"egg",name:"Ovo inteiro cozido",p:13.3,g:9.5,c:.6,f:0}]},
+{key:"organ",name:"Vísceras · 5%",share:.05,items:[
+{id:"liver",name:"Fígado bovino grelhado",p:29.9,g:5.3,c:4.2,f:0},
+{id:"chickenLiver",name:"Fígado de frango cozido",p:22.6,g:4.6,c:.9,f:0}]},
+{key:"carb",name:"Carboidratos · 35%",share:.35,items:[
+{id:"sweetPotato",name:"Batata-doce cozida",p:.6,g:.1,c:18.4,f:2.2},
+{id:"cassava",name:"Mandioca cozida",p:.6,g:.3,c:30.1,f:1.6},
+{id:"rice",name:"Arroz integral cozido",p:2.6,g:1,c:25.8,f:2.8},
+{id:"yam",name:"Inhame cozido",p:1.5,g:.2,c:27.9,f:4.1}]},
+{key:"veg",name:"Vegetais · 25%",share:.25,items:[
+{id:"carrot",name:"Cenoura cozida",p:.8,g:.2,c:7.7,f:3.2},
+{id:"broccoli",name:"Brócolis cozido",p:2.1,g:.5,c:4.4,f:3.4},
+{id:"zucchini",name:"Abobrinha cozida",p:1.2,g:.2,c:3.4,f:1.5},
+{id:"greenBean",name:"Vagem cozida",p:1.9,g:.2,c:5.3,f:2.4},
+{id:"chayote",name:"Chuchu cozido",p:.4,g:.1,c:4.8,f:1}]}
+];
+const groupBox=document.querySelector("#ingredientGroups");
+groups.forEach(group=>{const fs=document.createElement("fieldset"),legend=document.createElement("legend"),box=document.createElement("div");legend.textContent=group.name;box.className="checks";fs.append(legend,box);group.items.forEach(item=>{const label=document.createElement("label"),input=document.createElement("input");input.type="checkbox";input.name=group.key;input.value=item.id;label.append(input,document.createTextNode(item.name));box.append(label)});groupBox.append(fs)});
+const phase=document.querySelector("#phase");
+phase.addEventListener("change",()=>{const pup=phase.value==="puppy";document.querySelector("#puppyFields").hidden=!pup;document.querySelector("#adultFields").hidden=pup});
+function percent(weight,type,age,adultWeight,neutered,activity){
+let base;
+if(type==="adult"){const ranges=weight<=3?[7,10]:weight<=5?[5,6]:weight<=10?[4,6]:weight<=35?[4,5]:[3,4];base=(ranges[0]+ranges[1])/2}
+else{const size=adultWeight<10?0:adultWeight<25?1:adultWeight<35?2:3;const row=age<4?[10,10,8,8]:age<6?[8,8,7,7]:age<8?[6.5,6.5,6.5,6]:age<10?[5.5,5.5,5.5,5]:age<18?[5,5,4.5,4.5]:[5,4.5,4.25,3.5];base=row[size]}
+let adj=0;if(type==="adult"){adj+=neutered==="yes"?-.5:.5;adj+=activity==="low"?-.5:activity==="high"?1:0}
+return Math.max(2,Math.round((base+adj)*10)/10)}
+const fmt=n=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:1});
+document.querySelector("#form").addEventListener("submit",e=>{e.preventDefault();const w=Number(document.querySelector("#weight").value),type=phase.value,age=Number(document.querySelector("#age").value),aw=Number(document.querySelector("#adultWeight").value),neutered=document.querySelector("#neutered").value,activity=document.querySelector("#activity").value,meals=Number(document.querySelector("#meals").value),manual=Number(document.querySelector("#manual").value);
+if(!(w>0)){return}const pct=manual>=2?manual:percent(w,type,age,aw,neutered,activity),daily=w*pct*10;let rows=[],tot={g:0,p:0,fat:0,c:0,fiber:0},missing=[];
+groups.forEach(group=>{const chosen=group.items.filter(item=>document.querySelector('input[name="'+group.key+'"][value="'+item.id+'"]').checked);if(!chosen.length){missing.push(group.name);return}chosen.forEach(item=>{const grams=daily*group.share/chosen.length, macros={g:grams,p:grams*item.p/100,fat:grams*item.g/100,c:grams*item.c/100,fiber:grams*item.f/100};rows.push({name:item.name,...macros});Object.keys(tot).forEach(k=>tot[k]+=macros[k])})});
+const digest=Math.max(0,tot.c-tot.fiber),kcal=tot.p*3.5+tot.fat*8.5+digest*3.5,perMeal=tot.g/meals;
+const dataRows=rows.map(r=>'<tr><td>'+r.name+'</td><td>'+fmt(r.g)+'</td><td>'+fmt(r.g/meals)+'</td><td>'+fmt(r.p)+'</td><td>'+fmt(r.fat)+'</td><td>'+fmt(r.c)+'</td><td>'+fmt(r.fiber)+'</td></tr>').join("");
+let html='<div class="metrics"><div class="metric"><strong>'+fmt(tot.g)+' g</strong><span>total calculado/dia</span></div><div class="metric"><strong>'+fmt(perMeal)+' g</strong><span>por refeição · '+meals+'x</span></div><div class="metric"><strong>'+fmt(kcal)+' kcal</strong><span>energia estimada/dia</span></div></div>';
+if(missing.length)html+='<div class="notice"><strong>Grupos sem seleção</strong>'+missing.join("; ")+'. A quantidade total efetivamente distribuída é menor que o total-alvo.</div>';
+html+='<div class="table-wrap"><table><thead><tr><th>Ingrediente</th><th>g/dia</th><th>g/ref.</th><th>Prot. g</th><th>Gord. g</th><th>Carb. g</th><th>Fibra g</th></tr></thead><tbody>'+dataRows+'<tr><th>Total</th><th>'+fmt(tot.g)+'</th><th>'+fmt(perMeal)+'</th><th>'+fmt(tot.p)+'</th><th>'+fmt(tot.fat)+'</th><th>'+fmt(tot.c)+'</th><th>'+fmt(tot.fiber)+'</th></tr></tbody></table></div>';
+html+='<p><strong>Distribuição calórica aproximada:</strong> proteína '+fmt(kcal?tot.p*3.5/kcal*100:0)+'% · gordura '+fmt(kcal?tot.fat*8.5/kcal*100:0)+'% · carboidrato digerível '+fmt(kcal?digest*3.5/kcal*100:0)+'%.</p><p class="small">Percentual aplicado: '+fmt(pct)+'% do peso informado. A estimativa usa fatores energéticos aproximados; a composição varia conforme corte, preparo e fonte de dados.</p>';
+document.querySelector("#result").innerHTML=html});
+</script>
+</body></html>
