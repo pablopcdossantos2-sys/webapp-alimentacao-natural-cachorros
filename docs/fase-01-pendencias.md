@@ -90,3 +90,21 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - **31/10/2026:** avisos de suplementação no resultado, aviso específico de filhote e nota sobre fígado adicionados; campos de proveniência incluídos sem alterar valores numéricos ou shares. Evidência: commit `59b0dc4`.
 - **31/10/2026:** testes ampliados para funções efetivamente usadas pelo app e metadados de origem. Evidência: commit `a82c6e6`.
 - **31/10/2026:** corrigidas sequências literais de quebra de linha no README e no documento de pendências; adicionado script de auditoria de contraste, incluído no CI junto dos testes; criado `.gitignore`; Node mínimo documentado. Evidência: commits `869575c`, `438ba70`, `719725e` e atualização deste documento.
+
+## Revisão dos materiais do depósito — 31/10/2026
+
+- [x] Revisados os sete PDFs encontrados em `deposito/` e o arquivo `text.txt` (1 byte, sem conteúdo útil).
+- [x] Atualizado o guia educativo com distinção entre benefícios potenciais e evidência clínica, riscos de alimentos crus/malcozidos, formulação quantitativa, transição individualizada e segurança no preparo.
+- [x] Adicionadas à bibliografia as revisões de Akamine et al. (2023) e Andrade e Meneguelli (2025), o artigo de Saad e França (2010) e a política da AVMA sobre proteínas animais cruas/malcozidas.
+- [x] Removidos percentuais dos nomes das categorias da calculadora e explicitado que as participações internas dos grupos e os parâmetros de peso são heurísticas do protótipo, não recomendações.
+- [x] Criado `docs/revisao-materiais-deposito.md` com inventário, avaliação de qualidade e decisões editoriais.
+- [x] Movidos os oito arquivos originais para `deposito/usados/`, sem descarte dos materiais.
+- [ ] Revisão técnica por médico-veterinário com qualificação em nutrição veterinária continua obrigatória antes de apresentar o conteúdo como orientação validada.
+- [ ] Origem e licença dos valores nutricionais da calculadora continuam pendentes; os dados seguem `source: null` e `verified: false`.
+
+### Decisões editoriais desta revisão
+
+- Revisões narrativas e textos de divulgação foram usados como contexto, não como comprovação de que dietas caseiras previnam ou tratem doenças.
+- Percentuais de peso corporal, proporções de grupos, limites de vísceras e cronogramas fixos de transição encontrados em alguns materiais não foram adotados como recomendações.
+- A publicação de conteúdo sobre dieta crua foi restrita a uma explicação de risco microbiológico; o escopo do webapp permanece alimentação cozida.
+- O cozimento reduz riscos microbiológicos, mas não demonstra adequação nutricional. Congelamento doméstico não é apresentado como esterilização.
