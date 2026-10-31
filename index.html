@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f7ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111a15" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:,">
+<title>Prato de Cão — Calculadora educativa</title>
+<style>
+:root{color-scheme:light dark;--bg:#f5f7ef;--surface:#fff;--ink:#1d3026;--muted:#56665b;--line:#dce5d8;--green:#286b48;--on-green:#fff;--soft:#e8f1e6;--warn:#fff1d7;--warnink:#7b4c00}
+@media(prefers-color-scheme:dark){:root{--bg:#111a15;--surface:#1a261f;--ink:#eef6ed;--muted:#b2c2b4;--line:#33473a;--green:#8fd2a5;--on-green:#0f1f16;--soft:#263b2d;--warn:#3e301a;--warnink:#ffd78a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header,main,footer{max-width:980px;margin:auto;padding:1.1rem}header{padding-top:2rem}.brand{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;letter-spacing:-.04em;margin:.45rem 0 1rem}h2{font-size:1.2rem;margin:0 0 1rem}h3{font-size:1.1rem}.lead{max-width:66ch;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.2rem;box-shadow:0 6px 24px #142a1408}
+label{display:block;font-weight:650;margin:.8rem 0 .35rem}input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.65rem;width:100%}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:.2rem 1rem}.hint{font-size:.86rem;color:var(--muted)}fieldset{border:1px solid var(--line);border-radius:12px;margin:.8rem 0;padding:.6rem .8rem}legend{font-weight:750;padding:0 .3rem}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .6rem}.checks label{display:flex;align-items:flex-start;gap:.5rem;font-weight:450;margin:.25rem 0}.checks input{width:auto;margin-top:.3rem;accent-color:var(--green)}
+button{border:0;border-radius:12px;background:var(--green);color:var(--on-green);padding:.85rem 1.2rem;font:inherit;font-weight:750;cursor:pointer;width:100%;margin-top:.6rem}
+.result{margin-top:1rem}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.metric{background:var(--soft);border-radius:12px;padding:.8rem}.metric strong{display:block;font-size:1.25rem}.metric span{font-size:.8rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{text-align:left;padding:.55rem;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted)}.table-wrap{overflow-x:auto;margin:.7rem 0}
+.notice{background:var(--warn);color:var(--warnink);border-radius:12px;padding:.9rem;margin:.7rem 0}.notice strong{display:block}.small{font-size:.85rem;color:var(--muted)}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+footer{color:var(--muted);font-size:.85rem}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}.panel{padding:1rem}}
+@media(max-width:420px){.fields,.checks{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="brand">Prato de Cão · Ferramenta educativa</div><h1>Alimentação natural,<br>com mais clareza.</h1><p class="lead">Estime porções e macronutrientes de uma combinação de alimentos cozidos. Os valores são aproximados e não constituem prescrição nutricional.</p></header>
+<main>
+<div class="layout">
+<section class="panel"><h2>01 / Perfil do cão</h2>
+<form id="form" novalidate>
+<div class="fields"><div><label for="phase">Fase</label><select id="phase"><option value="adult">Adulto</option><option value="puppy">Filhote</option></select></div><div><label for="weight">Peso (kg)</label><input id="weight" type="number" min="0.5" max="120" step="0.1" value="8" required></div></div>
+<div id="puppyFields" hidden class="fields"><div><label for="age">Idade (meses)</label><input id="age" type="number" min="2" max="24" step="1" value="4"></div><div><label for="adultWeight">Peso adulto esperado (kg)</label><input id="adultWeight" type="number" min="1" max="120" step="0.1" value="15"></div></div>
+<div id="adultFields" class="fields"><div><label for="neutered">Castração</label><select id="neutered"><option value="yes">Castrado(a)</option><option value="no">Não castrado(a)</option></select></div><div><label for="activity">Atividade</label><select id="activity"><option value="low">Baixa</option><option value="moderate" selected>Moderada</option><option value="high">Alta</option></select></div></div>
+<div class="fields"><div><label for="meals">Refeições por dia</label><select id="meals"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></div><div><label for="manual">Percentual manual (%)</label><input id="manual" type="number" min="2" max="12" step="0.1" placeholder="Opcional" aria-describedby="manualHint"></div></div>
+<p id="manualHint" class="hint">O percentual é uma aproximação inicial baseada em faixas de peso/idade; necessidades individuais variam.</p>
+<div id="puppyModeNotice" class="notice" hidden role="note">Filhotes exigem formulação individual por veterinário.</div>
+<h2 style="margin-top:1.3rem">02 / Ingredientes cozidos</h2><p id="ingredientHint" class="hint">Selecione ingredientes. Para distribuir 100% da porção-alvo, selecione ao menos um alimento em cada grupo.</p>
+<div id="ingredientGroups" aria-describedby="ingredientHint"></div><button type="submit">Calcular estimativa</button>
+</form></section>
+<section class="panel"><h2>03 / Resultado estimado</h2><div id="result" aria-live="polite" aria-atomic="true"><p class="hint">Preencha o perfil e selecione ingredientes para ver o cálculo.</p></div></section>
+</div>
+<section class="panel result"><h2>Informações essenciais</h2><div class="notice"><strong>Suplementação é indispensável.</strong> Alimentação natural cozida sem ossos precisa de suplementação vitamínico-mineral adequada para ser completa. Esta calculadora não define doses de suplementos nem verifica todos os nutrientes.</div>
+<p>Use somente alimentos apropriados e devidamente cozidos. Não ofereça ossos cozidos. Cães com doenças crônicas, gestantes/lactantes, neonatos e casos que exigem manejo de peso precisam de avaliação veterinária individual.</p>
+<details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia, carambola e xilitol podem ser tóxicos para cães. Em caso de ingestão, procure atendimento veterinário.</p></details>
+<details><summary><strong>Transição alimentar</strong></summary><p>A mudança de alimentação deve ser planejada com profissional. Uma transição gradual pode reduzir desconfortos, mas o ritmo depende do animal e de sua condição clínica.</p></details></section>
+</main><footer>Estimativa educativa — não substitui médico-veterinário ou veterinário nutrólogo. Os resultados não devem ser interpretados como dieta completa e balanceada. Valores de composição ilustrativos — fonte não verificada. Parâmetros exigem validação técnica.</footer>
+<script type="module" src="./src/app.js"></script>
+</body></html>
