@@ -1,4 +1,8 @@
-/** Composition values are illustrative, unverified and not clinically validated. */
+/**
+ * Ingredient composition values used by the educational prototype.
+ * Values are illustrative and have not been source-verified or clinically validated.
+ * Keep provenance and redistribution permissions as open human-review items.
+ */
 export const ingredientGroups=[
 {key:"meat",name:"Carnes e proteínas · 35%",share:.35,items:[
 {id:"chicken",name:"Peito de frango cozido",p:31,g:3.6,c:0,f:0,source:null,verified:false},

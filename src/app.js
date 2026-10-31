@@ -1,83 +1,195 @@
-import { buildPlan, resolvePercentage, validateProfile } from "./calculations.js";
-import { ingredientGroups as groups } from "./ingredients.js";
+import {
+  buildPlan, estimatePercentage, resolvePercentage, validateProfile
+} from "./calculations.js";
+import { ingredientGroups } from "./ingredients.js";
 
 const $ = selector => document.querySelector(selector);
-const form=$("#form"), phase=$("#phase"), result=$("#result");
-const fields={puppy:$("#puppyFields"),adult:$("#adultFields")};
-const fmt=n=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:1});
-const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(className)n.className=className;return n;};
-function setPhase(){
-  const puppy=phase.value==="puppy";
-  for(const [key,box] of Object.entries(fields)){
-    box.hidden=(key==="puppy")!==puppy;
-    box.querySelectorAll("input,select").forEach(control=>{control.disabled=box.hidden;});
-  }
-  $("#puppyModeNotice").hidden=!puppy;
-}
-phase.addEventListener("change",setPhase);setPhase();
+const form = $("#form");
+const phase = $("#phase");
+const result = $("#result");
+const groupBox = $("#ingredientGroups");
+const puppyNotice = $("#puppyNotice");
+const fieldIds = {
+  weightKg: "weight", ageMonths: "age", adultWeightKg: "adultWeight",
+  meals: "meals", manualPct: "manual", neutered: "neutered", activity: "activity"
+};
+const fmt = value => Number(value).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+const fields = Object.fromEntries(Object.entries(fieldIds).map(([key, id]) => [key, () => $("#"+id)]));
 
-const ingredientMap=new Map();
-groups.forEach(group=>{
-  const fs=el("fieldset"),legend=el("legend",group.name),box=el("div",undefined,"checks");
-  fs.append(legend,box);
-  group.items.forEach(item=>{
-    const label=el("label"),input=el("input");
-    input.type="checkbox";input.name=group.key;input.value=item.id;
-    ingredientMap.set(item.id,input);
-    label.append(input,document.createTextNode(item.name));box.append(label);
-  });
-  if(group.key==="organ")fs.append(el("p","A frequência e o limite diário de fígado exigem revisão veterinária.","hint"));
-  $("#ingredientGroups").append(fs);
-});
-function showError(message,control){
-  const alert=el("p",message,"notice");alert.setAttribute("role","alert");alert.tabIndex=-1;
-  result.replaceChildren(alert);alert.focus();
-  if(control)control.focus();
+function element(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = String(text);
+  if (className) node.className = className;
+  return node;
 }
-function metric(value,label){const card=el("div",undefined,"metric");card.append(el("strong",value),el("span",label));return card;}
-function render(plan,pct,meals,manualWarning,isPuppy){
-  const root=el("div"),heading=el("h3","Estimativa calculada");heading.tabIndex=-1;root.append(heading);
-  if(isPuppy){const n=el("div","Filhotes exigem formulação individual por veterinário.","notice");n.setAttribute("role","note");root.append(n);}
-  const incomplete=plan.missingGroups.length>0;
-  const metrics=el("div",undefined,"metrics");
-  metrics.append(metric(fmt(plan.targetGrams)+" g","Alvo diário"),metric(fmt(plan.totals.grams)+" g","Distribuído"),metric(fmt(plan.perMealGrams)+" g","Distribuído por refeição · "+meals+"x"));
-  metrics.append(metric(fmt(plan.energy.kcal)+" kcal",incomplete?"kcal parcial (grupos faltando)":"energia estimada/dia"));
-  root.append(metrics);
-  if(incomplete){
-    const missingShare=groups.filter(g=>plan.missingGroups.includes(g.name)).reduce((s,g)=>s+g.share,0);
-    const notice=el("div",undefined,"notice");notice.append(el("strong","Estimativa incompleta: faltam "+fmt(missingShare*100)+"% da porção-alvo."),document.createTextNode(" Grupos sem seleção: "+plan.missingGroups.join("; ")+". O total distribuído não corresponde ao alvo diário."));root.append(notice);
+function cell(row, tag, text, scope) {
+  const node = element(tag, text);
+  if (scope) node.scope = scope;
+  row.append(node);
+}
+function showError(message, fieldId) {
+  const error = element("p", message, "notice");
+  error.setAttribute("role", "alert");
+  result.replaceChildren(error);
+  const target = fieldId ? $("#"+fieldId) : null;
+  if (target && !target.disabled) target.focus();
+}
+function syncPhase() {
+  const puppy = phase.value === "puppy";
+  $("#puppyFields").hidden = !puppy;
+  $("#adultFields").hidden = puppy;
+  $("#puppyFields").querySelectorAll("input,select").forEach(control => { control.disabled = !puppy; control.required = puppy; });
+  $("#adultFields").querySelectorAll("input,select").forEach(control => { control.disabled = puppy; control.required = !puppy; });
+  fields.weightKg().required = true;
+  fields.meals().required = true;
+  puppyNotice.hidden = !puppy;
+}
+phase.addEventListener("change", syncPhase);
+syncPhase();
+
+ingredientGroups.forEach(group => {
+  const fieldset = document.createElement("fieldset");
+  const legend = element("legend", group.name);
+  const box = element("div", undefined, "checks");
+  fieldset.append(legend, box);
+  group.items.forEach(item => {
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.name = group.key;
+    input.value = item.id;
+    input.dataset.ingredientId = item.id;
+    input.setAttribute("aria-describedby", "ingredientHint");
+    label.append(input, document.createTextNode(item.name));
+    box.append(label);
+  });
+  if (group.key === "organ") {
+    const note = element("p", "Atenção: o grupo inclui fígado. A frequência e o limite diário precisam de revisão veterinária; não interprete esta distribuição como recomendação de consumo.", "hint");
+    fieldset.append(note);
   }
-  if(manualWarning)root.append(el("p","O percentual manual difere muito da estimativa; confirme com seu veterinário.","notice"));
-  const table=el("table"),caption=el("caption","Distribuição estimada dos ingredientes");caption.className="visually-hidden";
-  const thead=el("thead"),head=el("tr");["Ingrediente","g/dia","g/ref.","Prot. g","Gord. g","Carb. g","Fibra g"].forEach(t=>{const th=el("th",t);th.scope="col";head.append(th);});thead.append(head);
-  const tbody=el("tbody");
-  plan.rows.forEach(r=>{const tr=el("tr");[r.name,fmt(r.grams),fmt(r.grams/meals),fmt(r.protein),fmt(r.fat),fmt(r.carbs),fmt(r.fiber)].forEach(t=>tr.append(el("td",t)));tbody.append(tr);});
-  const total=el("tr"),rowHead=el("th","Total");rowHead.scope="row";total.append(rowHead);
-  [fmt(plan.totals.grams),fmt(plan.perMealGrams),fmt(plan.totals.protein),fmt(plan.totals.fat),fmt(plan.totals.carbs),fmt(plan.totals.fiber)].forEach(t=>total.append(el("td",t)));tbody.append(total);
-  table.append(caption,thead,tbody);const wrap=el("div",undefined,"table-wrap");wrap.append(table);root.append(wrap);
-  root.append(el("p","Distribuição calórica aproximada: proteína "+fmt(plan.energy.proteinPct)+"% · gordura "+fmt(plan.energy.fatPct)+"% · carboidrato digerível "+fmt(plan.energy.carbPct)+"%."));
-  root.append(el("p","Percentual aplicado: "+fmt(pct)+"% do peso informado. Fatores energéticos e composição são aproximados.","small"));
-  root.append(el("div","Resultado parcial e educativo: sem suplementação vitamínico-mineral orientada por veterinário esta combinação não é dieta completa (ex.: cálcio).","notice"));
-  root.append(el("p","Valores de composição ilustrativos — fonte não verificada.","small"));
+  groupBox.append(fieldset);
+});
+
+const allChecks = () => [...form.querySelectorAll('input[type="checkbox"]:checked')];
+const firstCheck = () => form.querySelector('input[type="checkbox"]');
+function readProfile() {
+  const manualRaw = fields.manualPct().value.trim();
+  return {
+    type: phase.value,
+    weightKg: fields.weightKg().valueAsNumber,
+    ageMonths: fields.ageMonths().valueAsNumber,
+    adultWeightKg: fields.adultWeightKg().valueAsNumber,
+    meals: Number(fields.meals().value),
+    manualPct: manualRaw === "" ? null : fields.manualPct().valueAsNumber,
+    neutered: fields.neutered().value,
+    activity: fields.activity().value
+  };
+}
+function renderResult(plan, pctInfo, meals, puppy) {
+  const root = document.createElement("div");
+  const heading = element("h3", "Estimativa calculada");
+  heading.tabIndex = -1;
+  root.append(heading);
+
+  const incomplete = plan.missingGroups.length > 0;
+  const metrics = element("div", undefined, "metrics");
+  const metricItems = [
+    [fmt(plan.targetGrams)+" g", "Alvo diário"],
+    [fmt(plan.totals.grams)+" g", "Distribuído"],
+    [fmt(plan.perMealGrams)+" g", "Distribuído por refeição · "+meals+"x"]
+  ];
+  metricItems.forEach(([value, label]) => {
+    const card = element("div", undefined, "metric");
+    card.append(element("strong", value), element("span", label));
+    metrics.append(card);
+  });
+  root.append(metrics);
+
+  if (incomplete) {
+    const missingShare = ingredientGroups.filter(group => plan.missingGroups.includes(group.name)).reduce((sum, group) => sum + group.share, 0) * 100;
+    const notice = element("div", undefined, "notice");
+    notice.append(element("strong", "Estimativa incompleta: faltam "+fmt(missingShare)+"% da porção-alvo"), document.createTextNode(" Grupos sem seleção: "+plan.missingGroups.join("; ")+". O valor distribuído não corresponde ao alvo diário."));
+    root.append(notice);
+  }
+  if (pctInfo.warning) {
+    root.append(element("p", "O percentual manual difere muito da estimativa; confirme com seu veterinário.", "notice"));
+  }
+  if (puppy) {
+    root.append(element("p", "Filhotes exigem formulação individual por veterinário, especialmente durante o crescimento.", "notice"));
+  }
+  root.append(element("p", "Resultado parcial e educativo: sem suplementação vitamínico-mineral orientada por veterinário esta combinação não é dieta completa (ex.: cálcio).", "notice"));
+  if (incomplete) {
+    root.append(element("p", "Energia omitida: a seleção está incompleta e a estimativa calórica seria apenas parcial.", "small"));
+  } else {
+    const energy = plan.energy;
+    const metric = element("div", undefined, "metric energy-metric");
+    metric.append(element("strong", fmt(energy.kcal)+" kcal"), element("span", "Energia estimada/dia"));
+    root.append(metric);
+    const distribution = element("p");
+    distribution.append(element("strong", "Distribuição calórica aproximada: "), document.createTextNode(
+      "proteína "+fmt(energy.proteinPct)+"% · gordura "+fmt(energy.fatPct)+"% · carboidrato digerível "+fmt(energy.carbPct)+"%."
+    ));
+    root.append(distribution);
+  }
+
+  const wrap = element("div", undefined, "table-wrap");
+  const table = document.createElement("table");
+  const caption = element("caption", "Ingredientes selecionados e estimativa de macronutrientes");
+  caption.className = "visually-hidden";
+  const thead = document.createElement("thead");
+  const header = document.createElement("tr");
+  ["Ingrediente", "g/dia", "g/ref.", "Prot. g", "Gord. g", "Carb. g", "Fibra g"].forEach(label => cell(header, "th", label, "col"));
+  thead.append(header);
+  const tbody = document.createElement("tbody");
+  plan.rows.forEach(row => {
+    const tr = document.createElement("tr");
+    [row.name, fmt(row.grams), fmt(row.grams/meals), fmt(row.protein), fmt(row.fat), fmt(row.carbs), fmt(row.fiber)]
+      .forEach((value, index) => cell(tr, "td", value));
+    tbody.append(tr);
+  });
+  const total = document.createElement("tr");
+  cell(total, "th", "Total", "row");
+  [plan.totals.grams, plan.totals.grams/meals, plan.totals.protein, plan.totals.fat, plan.totals.carbs, plan.totals.fiber]
+    .forEach(value => cell(total, "td", fmt(value)));
+  tbody.append(total);
+  table.append(caption, thead, tbody);
+  wrap.append(table);
+  root.append(wrap);
+
+  root.append(element("p", "Percentual aplicado: "+fmt(pctInfo.pct)+"% do peso informado. Estimativa heurística, sem validação clínica; composição varia conforme corte, preparo e fonte de dados.", "small"));
+  root.append(element("p", "Valores de composição ilustrativos — fonte não verificada.", "small"));
   result.replaceChildren(root);
   heading.focus();
-  heading.scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  heading.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
-form.addEventListener("submit",event=>{
+
+form.addEventListener("submit", event => {
   event.preventDefault();
-  const input={
-    type:phase.value,weightKg:$("#weight").valueAsNumber,ageMonths:$("#age").valueAsNumber,
-    adultWeightKg:$("#adultWeight").valueAsNumber,neutered:$("#neutered").value,
-    activity:$("#activity").value,meals:Number($("#meals").value),
-    manualPct:$("#manual").value.trim()===""?null:$("#manual").valueAsNumber
-  };
-  const validation=validateProfile(input);
-  if(!validation.ok){const control=$("#"+({manualPct:"manual",weightKg:"weight",ageMonths:"age",adultWeightKg:"adultWeight",meals:"meals",activity:"activity"}[validation.field]||validation.field));showError(validation.message,control);return;}
-  const selectedIds=new Set([...ingredientMap].filter(([,control])=>control.checked).map(([id])=>id));
-  if(selectedIds.size===0){showError("Selecione ao menos um ingrediente.",ingredientMap.values().next().value);return;}
-  try{
-    const resolved=resolvePercentage({...input});
-    const plan=buildPlan({weightKg:input.weightKg,pct:resolved.pct,groups,selectedIds,meals:input.meals});
-    render(plan,resolved.pct,input.meals,resolved.manualWarning,input.type==="puppy");
-  }catch(error){showError(error.message||"Não foi possível calcular com os dados informados.");}
+  const profile = readProfile();
+  const validation = validateProfile(profile);
+  if (!validation.ok) {
+    showError(validation.message, fieldIds[validation.field] || validation.field);
+    return;
+  }
+  const checked = allChecks();
+  if (!checked.length) {
+    showError("Selecione ao menos um ingrediente.", firstCheck()?.id);
+    firstCheck()?.focus();
+    return;
+  }
+  const selectedIds = new Set(checked.map(input => input.dataset.ingredientId));
+  let pctInfo;
+  try {
+    pctInfo = resolvePercentage(profile);
+    const plan = buildPlan({
+      weightKg: profile.weightKg, pct: pctInfo.pct,
+      groups: ingredientGroups, selectedIds, meals: profile.meals
+    });
+    renderResult(plan, pctInfo, profile.meals, profile.type === "puppy");
+  } catch (error) {
+    const message = error.message === "weightKg exceeds expected adult weight"
+      ? "O peso atual do filhote não pode ser maior que o peso adulto esperado."
+      : "Não foi possível calcular com os dados informados. Revise o perfil.";
+    showError(message, "weight");
+  }
 });

@@ -1,45 +1,54 @@
-# Calculadora de Macronutrientes — Alimentação Natural Cozida para Cães
+# Prato de Cão — Calculadora educativa de alimentação natural cozida
 
-Webapp estático, em português, para estimativas educativas de porções e macronutrientes de alimentação natural cozida (sem ossos). O projeto não prescreve dietas, não garante completude nutricional e não substitui médico-veterinário ou veterinário nutrólogo.
+Webapp estático, em português, para estimativas educativas de porções e macronutrientes de alimentos cozidos para cães. Não prescreve dietas, não garante completude nutricional e não substitui médico-veterinário ou veterinário nutrólogo.
 
-## Escopo inicial
+## Escopo
 
-- Perfil do cão (adulto/filhote) e estimativa de quantidade diária.
-- Seleção de ingredientes cozidos por categoria.
+- Perfil de cães adultos e filhotes e estimativa heurística da quantidade diária.
+- Seleção de ingredientes por grupo.
 - Estimativa de porções, proteína, gordura, carboidratos, fibra e energia.
-- Avisos para categorias sem ingredientes, suplementação e limitações dos dados.
-- Interface responsiva, tema claro/escuro e execução via servidor HTTP local.
+- Avisos para seleção incompleta, suplementação, filhotes e vísceras.
+- Interface responsiva, tema claro/escuro e módulos JavaScript sem dependências de runtime.
+- Testes automatizados das regras de cálculo e auditoria automatizada de contraste.
 
 ## Segurança e limitações
 
-A estimativa depende de dados de composição e parâmetros de referência que precisam de validação técnica. Não use para cães com doenças, gestação/lactação, neonatos ou outras situações clínicas sem orientação veterinária. A AN cozida sem suplementação adequada não deve ser apresentada como dieta completa. O cálculo não determina doses de suplementos. A estimativa percentual, inclusive a interpolação e as regras para filhotes, é heurística e não validada clinicamente.
+Os percentuais, grupos, valores de composição e estimativas de energia são heurísticos ou ilustrativos e não foram validados clinicamente. Os dados de composição continuam sem fontes verificadas. Não use os resultados para formular ou fornecer uma dieta sem avaliação individual de médico-veterinário ou veterinário nutrólogo.
 
-## Executar
+Alimentação natural cozida sem suplementação vitamínico-mineral adequada não deve ser considerada completa. O aplicativo não calcula doses de suplementos. Filhotes, cães com doenças, gestantes/lactantes, neonatos e animais com necessidades clínicas exigem formulação individual. A seleção parcial não representa a porção-alvo diária completa.
 
-A página importa módulos JavaScript; sirva o diretório por HTTP em vez de abrir o HTML como `file://`.
+Os valores dos ingredientes permanecem marcados com `source: null` e `verified: false`. Não foram inventadas referências, fontes ou permissões de redistribuição. A frequência e o limite de fígado, assim como a inconsistência de preparo de um ingrediente, continuam pendentes de revisão veterinária.
+
+## Executar localmente
+
+A página importa módulos JavaScript. Sirva o diretório por HTTP, em vez de abrir `index.html` como `file://`.
+
+Requer Node.js 22 ou superior para executar testes e verificações.
 
 ```bash
-# Testes unitários (Node.js 22 ou superior)
 npm test
-
-# Servidor local simples (Python 3)
+npm run check:contrast
 python -m http.server 8000
 ```
 
-Depois, acesse `http://localhost:8000` no navegador.
+Acesse `http://localhost:8000`.
 
-## Dados e rastreabilidade
+## GitHub Pages
 
-Os valores de composição estão marcados como não verificados (`source: null`, `verified: false`). Nenhuma fonte, código de tabela ou licença foi presumido. A revisão das fontes e permissões continua pendente.
+O projeto é compatível com GitHub Pages: é uma aplicação estática em HTML, CSS e JavaScript, sem backend ou etapa de compilação. O workflow `.github/workflows/deploy-pages.yml` executa os testes, prepara um diretório de publicação mínimo e implanta o site a partir de `main`.
 
-## Publicação
+**Ativação inicial necessária:** em `Settings > Pages > Build and deployment > Source`, selecione `GitHub Actions`. Depois dessa configuração, cada push em `main` poderá publicar automaticamente.
 
-O projeto não foi publicado nem teve o GitHub Pages ativado. Qualquer publicação depende de aprovação humana após revisão técnica e documental.
+Endereço esperado: https://pablopcdossantos2-sys.github.io/webapp-alimentacao-natural-cachorros/
 
-## Referências e atribuição
+O site será público. A publicação técnica não significa validação nutricional ou autorização para usar as estimativas como dieta.
 
-Antes de uma publicação ampla, revisar referências primárias (NRC, FEDIAF, WSAVA) e atribuição/licença das fontes de alimentação natural e tabelas de composição. A menção a essas entidades não significa que os parâmetros atuais tenham sido extraídos ou validados por elas.
+## Verificação e pendências
+
+`npm test` executa os testes com o runner nativo do Node.js. `npm run check:contrast` verifica pares de cores selecionados segundo WCAG AA. A inspeção real em Chromium (desktop/mobile, claro/escuro), axe/Lighthouse e a revisão veterinária permanecem necessárias. Não se deve declarar validação visual ou clínica sem essas evidências.
+
+Consulte `docs/fase-01-pendencias.md` para o histórico, critérios de validação e pendências humanas.
 
 ## Licença
 
-Ainda não definida. Não assumir licença de código ou de dados até resolver a pendência com os titulares relevantes.
+O código do projeto está sob GNU Affero General Public License v3.0; consulte `LICENSE`. Isso não presume que os valores nutricionais ou eventuais dados de terceiros tenham a mesma licença. A origem, as permissões e a atribuição desses dados continuam pendentes de confirmação.
