@@ -28,7 +28,17 @@ const pairs = [
   ["violeta escuro em métrica", "#b9a4ff", "#253548", 4.5],
   ["azul escuro em métrica", "#91bdff", "#253548", 4.5],
   ["teal escuro em métrica", "#73dfcf", "#253548", 4.5],
-  ["aviso escuro", "#ffdb9b", "#44341f", 4.5]
+  ["aviso escuro", "#ffdb9b", "#44341f", 4.5],
+  ["cartão coral claro", "#b64b45", "#faf2f2", 4.5],
+  ["cartão açafrão claro", "#805400", "#f6f3ed", 4.5],
+  ["cartão violeta claro", "#7053b8", "#f5f3fa", 4.5],
+  ["cartão azul claro", "#315f99", "#f1f4f8", 4.5],
+  ["cartão teal claro", "#08766f", "#eef5f5", 4.5],
+  ["cartão coral escuro", "#ff9488", "#2c2e39", 4.5],
+  ["cartão açafrão escuro", "#f3c66b", "#2b3137", 4.5],
+  ["cartão violeta escuro", "#b9a4ff", "#272f41", 4.5],
+  ["cartão azul escuro", "#91bdff", "#243141", 4.5],
+  ["cartão teal escuro", "#73dfcf", "#22333e", 4.5]
 ];
 
 function luminance(hex) {
