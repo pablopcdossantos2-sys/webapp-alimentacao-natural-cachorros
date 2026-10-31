@@ -38,7 +38,7 @@ Depois, acesse `http://localhost:8000` no navegador.
 
 ## Verificação
 
-Os testes automatizados cobrem as funções de cálculo efetivamente usadas pelo aplicativo, validações, seleção integral/parcial, limites e metadados de rastreabilidade. A auditoria de contraste é executada separadamente por `npm run check:contrast`.
+Os testes automatizados cobrem as funções de cálculo efetivamente usadas pelo aplicativo, validações, seleção integral/parcial, limites e metadados de rastreabilidade. A auditoria de contraste é executada separadamente por `npm run check:contrast` e também foi incluída no workflow do GitHub Actions.
 
 A validação visual em Chromium desktop/mobile, nos temas claro/escuro, e a auditoria completa com axe/Lighthouse continuam necessárias antes de declarar a interface validada.
 
