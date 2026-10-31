@@ -1,0 +1,8 @@
+{
+  "name": "prato-de-cao",
+  "private": true,
+  "type": "module",
+  "description": "Calculadora educativa de alimentação natural cozida para cães",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test" }
+}
