@@ -343,3 +343,18 @@ footer nav { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: .7rem; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Education guide content modules */
+.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:1rem 0}
+.guide-card{min-width:0;padding:1rem 1.05rem;border:1px solid var(--line);border-left:4px solid var(--guide-accent,var(--brand));border-radius:14px;background:color-mix(in srgb,var(--guide-accent,var(--brand)) 7%,var(--surface))}
+.guide-card h3{margin:.05rem 0 .35rem;color:var(--guide-accent,var(--brand))}
+.guide-card p{margin:0;max-width:none;color:var(--muted);font-size:.94rem}
+.guide-card--coral{--guide-accent:var(--coral)}
+.guide-card--gold{--guide-accent:var(--gold)}
+.guide-card--violet{--guide-accent:var(--violet)}
+.guide-card--blue{--guide-accent:var(--blue)}
+.guide-card--teal{--guide-accent:var(--brand)}
+.guide-steps{counter-reset:guide-step;list-style:none;padding:0!important;display:grid;gap:.65rem}
+.guide-steps li{counter-increment:guide-step;position:relative;padding:.8rem .9rem .8rem 3.2rem;margin:0!important;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.guide-steps li::before{content:counter(guide-step);position:absolute;left:.85rem;top:.72rem;display:grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:9px;background:color-mix(in srgb,var(--brand) 16%,var(--surface));color:var(--brand);font-weight:850}
+@media(max-width:560px){.guide-grid{grid-template-columns:1fr}}
