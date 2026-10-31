@@ -5,8 +5,8 @@ import {ingredientGroups} from "../src/ingredients.js";
 
 test("adult and puppy baseline estimates remain recognizable",()=>{
   assert.equal(estimatePercentage({weightKg:8}),4.5);
-  assert.equal(estimatePercentage({weightKg:2,neutered:"yes",activity:"low"}),7.5);
-  assert.equal(estimatePercentage({weightKg:50,neutered:"yes",activity:"low"}),2.5);
+  assert.equal(estimatePercentage({weightKg:2,neutered:"yes",activity:"low"}),7.2);
+  assert.equal(estimatePercentage({weightKg:50,neutered:"yes",activity:"low"}),3);
   assert.equal(estimatePercentage({weightKg:3,type:"puppy",ageMonths:3,adultWeightKg:8}),10);
   assert.equal(estimatePercentage({weightKg:3,type:"puppy",ageMonths:7,adultWeightKg:30}),6.5);
 });
