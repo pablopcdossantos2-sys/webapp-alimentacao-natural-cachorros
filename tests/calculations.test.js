@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { estimatePercentage, distributeIngredients, sumMacros } from "../src/calculations.js";
+import { ingredientGroups } from "../src/ingredients.js";
 
 test("adult estimate respects the implemented range and adjustment floor", () => {
   assert.equal(estimatePercentage({weightKg:8}), 4.5);
@@ -30,4 +31,19 @@ test("category share is split equally across chosen ingredients", () => {
 
 test("no selected items produces no allocated ingredient rows", () => {
   assert.deepEqual(distributeIngredients(100,[{share:.3,items:[{id:"x",name:"X",p:1,g:1,c:1,f:1}]}],new Set()),[]);
+});
+
+
+test("ingredient dataset has unique IDs, valid numeric values, and group shares summing to 100%", () => {
+  const ids = ingredientGroups.flatMap(group => group.items.map(item => item.id));
+  assert.equal(new Set(ids).size, ids.length, "ingredient IDs must be unique");
+  assert.ok(Math.abs(ingredientGroups.reduce((sum, group) => sum + group.share, 0) - 1) < 1e-9);
+  for (const group of ingredientGroups) {
+    assert.ok(group.items.length > 0);
+    for (const item of group.items) {
+      for (const key of ["p", "g", "c", "f"]) {
+        assert.ok(Number.isFinite(item[key]) && item[key] >= 0, `${item.id}.${key} must be a non-negative number`);
+      }
+    }
+  }
 });
