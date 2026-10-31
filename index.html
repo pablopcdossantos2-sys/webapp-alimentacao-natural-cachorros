@@ -47,7 +47,8 @@ footer{color:var(--muted);font-size:.85rem}
 <details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia, carambola e xilitol podem ser tóxicos para cães. Em caso de ingestão, procure atendimento veterinário.</p></details>
 <details><summary><strong>Transição alimentar</strong></summary><p>A mudança de alimentação deve ser planejada com profissional. Uma transição gradual pode reduzir desconfortos, mas o ritmo depende do animal e de sua condição clínica.</p></details></section>
 </main><footer>Estimativa educativa — não substitui médico-veterinário ou veterinário nutrólogo. Os resultados não devem ser interpretados como dieta completa e balanceada. Valores de composição e parâmetros exigem validação técnica e revisão das fontes antes de uso clínico.</footer>
-<script>
+<script type="module">
+import { estimatePercentage } from "./src/calculations.js";
 const groups=[
 {key:"meat",name:"Carnes e proteínas · 35%",share:.35,items:[
 {id:"chicken",name:"Peito de frango cozido",p:31,g:3.6,c:0,f:0},
@@ -75,11 +76,8 @@ groups.forEach(group=>{const fs=document.createElement("fieldset"),legend=docume
 const phase=document.querySelector("#phase");
 phase.addEventListener("change",()=>{const pup=phase.value==="puppy";document.querySelector("#puppyFields").hidden=!pup;document.querySelector("#adultFields").hidden=pup});
 function percent(weight,type,age,adultWeight,neutered,activity){
-let base;
-if(type==="adult"){const ranges=weight<=3?[7,10]:weight<=5?[5,6]:weight<=10?[4,6]:weight<=35?[4,5]:[3,4];base=(ranges[0]+ranges[1])/2}
-else{const size=adultWeight<10?0:adultWeight<25?1:adultWeight<35?2:3;const row=age<4?[10,10,8,8]:age<6?[8,8,7,7]:age<8?[6.5,6.5,6.5,6]:age<10?[5.5,5.5,5.5,5]:age<18?[5,5,4.5,4.5]:[5,4.5,4.25,3.5];base=row[size]}
-let adj=0;if(type==="adult"){adj+=neutered==="yes"?-.5:.5;adj+=activity==="low"?-.5:activity==="high"?1:0}
-return Math.max(2,Math.round((base+adj)*10)/10)}
+return estimatePercentage({weightKg:weight,type,ageMonths:age,adultWeightKg:adultWeight,neutered,activity});
+}
 const fmt=n=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:1});
 document.querySelector("#form").addEventListener("submit",e=>{e.preventDefault();const w=Number(document.querySelector("#weight").value),type=phase.value,age=Number(document.querySelector("#age").value),aw=Number(document.querySelector("#adultWeight").value),neutered=document.querySelector("#neutered").value,activity=document.querySelector("#activity").value,meals=Number(document.querySelector("#meals").value),manual=Number(document.querySelector("#manual").value);
 if(!(w>0)){return}const pct=manual>=2?manual:percent(w,type,age,aw,neutered,activity),daily=w*pct*10;let rows=[],tot={g:0,p:0,fat:0,c:0,fiber:0},missing=[];
