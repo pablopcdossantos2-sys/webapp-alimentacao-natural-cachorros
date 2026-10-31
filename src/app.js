@@ -59,7 +59,7 @@ ingredientGroups.forEach(group => {
     input.name = group.key;
     input.value = item.id;
     input.dataset.ingredientId = item.id;
-    input.setAttribute("aria-describedby", "ingredientHint");
+    input.setAttribute("aria-describedby", "ingredientHint shareDisclaimer");
     label.append(input, document.createTextNode(item.name));
     box.append(label);
   });
