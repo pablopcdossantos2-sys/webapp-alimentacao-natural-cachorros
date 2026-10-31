@@ -36,9 +36,9 @@ Acesse `http://localhost:8000`.
 
 O projeto é compatível com GitHub Pages: é uma aplicação estática em HTML, CSS e JavaScript, sem backend ou etapa de compilação. O workflow `.github/workflows/deploy-pages.yml` executa os testes, prepara as páginas e os módulos necessários e implanta o site a partir de `main`.
 
-**Ativação inicial necessária:** em `Settings > Pages > Build and deployment > Source`, selecione `GitHub Actions`. Depois dessa configuração, cada push em `main` poderá publicar automaticamente.
+**GitHub Pages está ativado e a primeira execução do workflow personalizado foi concluída com sucesso em 31/10/2026.** Os próximos pushes em `main` publicarão automaticamente as páginas.
 
-Endereço esperado: https://pablopcdossantos2-sys.github.io/webapp-alimentacao-natural-cachorros/
+Site: https://pablopcdossantos2-sys.github.io/webapp-alimentacao-natural-cachorros/
 
 O site será público. A publicação técnica não significa validação nutricional ou autorização para usar as estimativas como dieta.
 
