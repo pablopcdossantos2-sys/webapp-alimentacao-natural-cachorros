@@ -1,0 +1,8 @@
+{
+  "name": "prato-de-cao",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
