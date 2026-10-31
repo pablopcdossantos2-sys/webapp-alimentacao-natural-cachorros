@@ -64,7 +64,7 @@ test("buildPlan with real ingredients allocates all group shares", () => {
   assert.equal(plan.targetGrams,360);
   assert.ok(Math.abs(plan.totals.grams-plan.targetGrams)<1e-9);
   assert.deepEqual(plan.missingGroups,[]);
-  assert.equal(plan.perMealGrams,180);
+  assert.ok(Math.abs(plan.perMealGrams-180)<1e-9);
 });
 
 test("buildPlan reports missing groups and distributes only selected shares", () => {
