@@ -8,7 +8,7 @@ Webapp estático, em português, para estimativas educativas de porções e macr
 - Seleção de ingredientes cozidos por categoria.
 - Estimativa de porções, proteína, gordura, carboidratos, fibra e energia.
 - Avisos de categoria sem ingredientes e informação sobre suplementação.
-- Interface mobile-first, tema claro/escuro e execução local sem servidor.
+- Interface responsiva, tema claro/escuro e execução estática via servidor local ou GitHub Pages.
 
 ## Segurança e limitações
 
@@ -16,7 +16,7 @@ A estimativa depende de dados de composição e parâmetros de referência que p
 
 ## Executar
 
-Abra `index.html` diretamente em um navegador. Não há build nem dependências externas.
+A página importa um módulo JavaScript; por isso, sirva o diretório por HTTP em vez de abrir o HTML como `file://` (restrições de módulos do navegador). Não há build nem dependências externas.\n\n```bash\n# Testes unitários (requer Node.js 22 ou compatível)\nnpm test\n\n# Servidor local simples (Python 3)\npython -m http.server 8000\n```\n\nDepois, acesse `http://localhost:8000` no navegador.
 
 ## Publicação
 
