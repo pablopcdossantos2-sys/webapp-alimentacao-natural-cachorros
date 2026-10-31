@@ -5,7 +5,7 @@ Webapp estático, em português, para estimativas educativas de porções e macr
 ## Páginas
 
 - **Calculadora** (`index.html`): estimativas matemáticas de porções e macronutrientes.
-- **Guia educativo** (`guia-alimentacao-natural.html`): fundamentos de alimentação caseira cozida, equilíbrio nutricional, formulação, preparo seguro e limites da ferramenta.
+- **Guia educativo** (`guia-alimentacao-natural.html`): fundamentos nutricionais, leitura crítica de alegações sobre benefícios, riscos microbiológicos de alimentos crus, formulação, transição individualizada, preparo seguro e limites da ferramenta.
 - **Referências bibliográficas** (`referencias.html`): fontes organizadas em conformidade com a ABNT NBR 6023:2025.
 
 ## Interface
@@ -51,3 +51,8 @@ Consulte `docs/fase-01-pendencias.md` para o histórico, critérios de validaç�
 ## Licença
 
 O código do projeto está sob GNU Affero General Public License v3.0; consulte `LICENSE`. Isso não presume que os valores nutricionais ou eventuais dados de terceiros tenham a mesma licença. A origem, as permissões e a atribuição desses dados continuam pendentes de confirmação.
+
+
+## Materiais de referência do projeto
+
+Os documentos usados na revisão editorial estão preservados em `deposito/usados/`. O inventário, a avaliação crítica e as decisões sobre o que foi ou não incorporado estão em `docs/revisao-materiais-deposito.md`. Materiais de divulgação e revisões narrativas foram tratados como contexto, não como receitas ou comprovação clínica. A revisão veterinária independente do conteúdo continua pendente.
