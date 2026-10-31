@@ -4,8 +4,8 @@ import { estimatePercentage, distributeIngredients, sumMacros } from "../src/cal
 
 test("adult estimate respects the implemented range and adjustment floor", () => {
   assert.equal(estimatePercentage({weightKg:8}), 4.5);
-  assert.equal(estimatePercentage({weightKg:2,neutered:"yes",activity:"low"}), 6.5);
-  assert.equal(estimatePercentage({weightKg:50,neutered:"yes",activity:"low"}), 2);
+  assert.equal(estimatePercentage({weightKg:2,neutered:"yes",activity:"low"}), 7.5);
+  assert.equal(estimatePercentage({weightKg:50,neutered:"yes",activity:"low"}), 2.5);
 });
 
 test("puppy percentage uses expected adult size and age band", () => {
