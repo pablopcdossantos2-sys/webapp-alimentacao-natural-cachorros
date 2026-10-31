@@ -79,15 +79,51 @@ function percent(weight,type,age,adultWeight,neutered,activity){
 return estimatePercentage({weightKg:weight,type,ageMonths:age,adultWeightKg:adultWeight,neutered,activity});
 }
 const fmt=n=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:1});
-document.querySelector("#form").addEventListener("submit",e=>{e.preventDefault();const w=Number(document.querySelector("#weight").value),type=phase.value,age=Number(document.querySelector("#age").value),aw=Number(document.querySelector("#adultWeight").value),neutered=document.querySelector("#neutered").value,activity=document.querySelector("#activity").value,meals=Number(document.querySelector("#meals").value),manual=Number(document.querySelector("#manual").value);
-if(!(w>0)){return}const pct=manual>=2?manual:percent(w,type,age,aw,neutered,activity),daily=w*pct*10;let rows=[],tot={g:0,p:0,fat:0,c:0,fiber:0},missing=[];
-groups.forEach(group=>{const chosen=group.items.filter(item=>document.querySelector('input[name="'+group.key+'"][value="'+item.id+'"]').checked);if(!chosen.length){missing.push(group.name);return}chosen.forEach(item=>{const grams=daily*group.share/chosen.length, macros={g:grams,p:grams*item.p/100,fat:grams*item.g/100,c:grams*item.c/100,fiber:grams*item.f/100};rows.push({name:item.name,...macros});Object.keys(tot).forEach(k=>tot[k]+=macros[k])})});
-const digest=Math.max(0,tot.c-tot.fiber),kcal=tot.p*3.5+tot.fat*8.5+digest*3.5,perMeal=tot.g/meals;
-const dataRows=rows.map(r=>'<tr><td>'+r.name+'</td><td>'+fmt(r.g)+'</td><td>'+fmt(r.g/meals)+'</td><td>'+fmt(r.p)+'</td><td>'+fmt(r.fat)+'</td><td>'+fmt(r.c)+'</td><td>'+fmt(r.fiber)+'</td></tr>').join("");
-let html='<div class="metrics"><div class="metric"><strong>'+fmt(tot.g)+' g</strong><span>total calculado/dia</span></div><div class="metric"><strong>'+fmt(perMeal)+' g</strong><span>por refeição · '+meals+'x</span></div><div class="metric"><strong>'+fmt(kcal)+' kcal</strong><span>energia estimada/dia</span></div></div>';
-if(missing.length)html+='<div class="notice"><strong>Grupos sem seleção</strong>'+missing.join("; ")+'. A quantidade total efetivamente distribuída é menor que o total-alvo.</div>';
-html+='<div class="table-wrap"><table><thead><tr><th>Ingrediente</th><th>g/dia</th><th>g/ref.</th><th>Prot. g</th><th>Gord. g</th><th>Carb. g</th><th>Fibra g</th></tr></thead><tbody>'+dataRows+'<tr><th>Total</th><th>'+fmt(tot.g)+'</th><th>'+fmt(perMeal)+'</th><th>'+fmt(tot.p)+'</th><th>'+fmt(tot.fat)+'</th><th>'+fmt(tot.c)+'</th><th>'+fmt(tot.fiber)+'</th></tr></tbody></table></div>';
-html+='<p><strong>Distribuição calórica aproximada:</strong> proteína '+fmt(kcal?tot.p*3.5/kcal*100:0)+'% · gordura '+fmt(kcal?tot.fat*8.5/kcal*100:0)+'% · carboidrato digerível '+fmt(kcal?digest*3.5/kcal*100:0)+'%.</p><p class="small">Percentual aplicado: '+fmt(pct)+'% do peso informado. A estimativa usa fatores energéticos aproximados; a composição varia conforme corte, preparo e fonte de dados.</p>';
-document.querySelector("#result").innerHTML=html});
+const result=document.querySelector("#result");
+const form=document.querySelector("#form");
+const field=id=>document.querySelector("#"+id);
+function element(tag,text,className){const node=document.createElement(tag);if(text!==undefined)node.textContent=String(text);if(className)node.className=className;return node}
+function cell(row,tag,text){row.append(element(tag,text))}
+function renderResult({rows,tot,missing,meals,pct,kcal,digest}){
+  const root=document.createElement("div");
+  const metrics=element("div",undefined,"metrics");
+  [[fmt(tot.g)+" g","total calculado/dia"],[fmt(tot.g/meals)+" g","por refeição · "+meals+"x"],[fmt(kcal)+" kcal","energia estimada/dia"]].forEach(([value,label])=>{
+    const card=element("div",undefined,"metric");card.append(element("strong",value),element("span",label));metrics.append(card);
+  });
+  root.append(metrics);
+  if(missing.length){const notice=element("div",undefined,"notice");notice.append(element("strong","Grupos sem seleção"),document.createTextNode(missing.join("; ")+". A quantidade total efetivamente distribuída é menor que o total-alvo."));root.append(notice)}
+  const wrap=element("div",undefined,"table-wrap"),table=document.createElement("table"),thead=document.createElement("thead"),head=document.createElement("tr");
+  ["Ingrediente","g/dia","g/ref.","Prot. g","Gord. g","Carb. g","Fibra g"].forEach(t=>cell(head,"th",t));thead.append(head);
+  const tbody=document.createElement("tbody");
+  rows.forEach(r=>{const tr=document.createElement("tr");[r.name,fmt(r.g),fmt(r.g/meals),fmt(r.p),fmt(r.fat),fmt(r.c),fmt(r.fiber)].forEach(t=>cell(tr,"td",t));tbody.append(tr)});
+  const total=document.createElement("tr");["Total",fmt(tot.g),fmt(tot.g/meals),fmt(tot.p),fmt(tot.fat),fmt(tot.c),fmt(tot.fiber)].forEach(t=>cell(total,"th",t));tbody.append(total);table.append(thead,tbody);wrap.append(table);root.append(wrap);
+  const energy=element("p");energy.append(element("strong","Distribuição calórica aproximada: "),document.createTextNode("proteína "+fmt(kcal?tot.p*3.5/kcal*100:0)+"% · gordura "+fmt(kcal?tot.fat*8.5/kcal*100:0)+"% · carboidrato digerível "+fmt(kcal?digest*3.5/kcal*100:0)+"%."));root.append(energy);
+  root.append(element("p","Percentual aplicado: "+fmt(pct)+"% do peso informado. A estimativa usa fatores energéticos aproximados; a composição varia conforme corte, preparo e fonte de dados.","small"));
+  result.replaceChildren(root);
+}
+function showError(message){result.replaceChildren(element("p",message,"notice"))}
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  const w=field("weight").valueAsNumber,type=phase.value,age=field("age").valueAsNumber,aw=field("adultWeight").valueAsNumber,
+    neutered=field("neutered").value,activity=field("activity").value,meals=Number(field("meals").value),
+    manualRaw=field("manual").value.trim(),manual=manualRaw===""?null:field("manual").valueAsNumber;
+  if(!Number.isFinite(w)||w<.5||w>120){showError("Informe um peso entre 0,5 e 120 kg.");field("weight").focus();return}
+  if(!Number.isInteger(meals)||meals<1||meals>4){showError("Selecione de 1 a 4 refeições por dia.");return}
+  if(manual!==null&&(!Number.isFinite(manual)||manual<2||manual>12)){showError("O percentual manual deve estar entre 2% e 12%, ou deixe o campo vazio.");field("manual").focus();return}
+  if(type==="puppy"&&(!Number.isFinite(age)||age<2||age>24||!Number.isFinite(aw)||aw<1||aw>120)){showError("Para filhotes, informe idade entre 2 e 24 meses e peso adulto esperado entre 1 e 120 kg.");return}
+  let pct;
+  try{pct=manual===null?percent(w,type,age,aw,neutered,activity):manual}catch(error){showError("Não foi possível calcular com os dados informados. Revise o perfil.");return}
+  const daily=w*pct*10,rows=[],tot={g:0,p:0,fat:0,c:0,fiber:0},missing=[];
+  groups.forEach(group=>{
+    const chosen=group.items.filter(item=>document.querySelector('input[name="'+group.key+'"][value="'+item.id+'"]').checked);
+    if(!chosen.length){missing.push(group.name);return}
+    chosen.forEach(item=>{
+      const grams=daily*group.share/chosen.length,macros={g:grams,p:grams*item.p/100,fat:grams*item.g/100,c:grams*item.c/100,fiber:grams*item.f/100};
+      rows.push({name:item.name,...macros});Object.keys(tot).forEach(k=>tot[k]+=macros[k]);
+    });
+  });
+  const digest=Math.max(0,tot.c-tot.fiber),kcal=tot.p*3.5+tot.fat*8.5+digest*3.5;
+  renderResult({rows,tot,missing,meals,pct,kcal,digest});
+});
 </script>
 </body></html>
