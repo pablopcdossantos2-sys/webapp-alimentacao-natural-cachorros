@@ -64,7 +64,7 @@ ingredientGroups.forEach(group => {
     box.append(label);
   });
   if (group.key === "organ") {
-    const note = element("p", "Atenção: o grupo inclui fígado. A frequência e o limite diário precisam de revisão veterinária; não interprete esta distribuição como recomendação de consumo.", "hint");
+    const note = element("p", "O grupo inclui fígado. A frequência e a quantidade dependem de uma receita completa e de avaliação veterinária; a fração interna do modelo não é recomendação de consumo.", "hint");
     fieldset.append(note);
   }
   groupBox.append(fieldset);
@@ -94,21 +94,22 @@ function renderResult(plan, pctInfo, meals, puppy) {
   const incomplete = plan.missingGroups.length > 0;
   const metrics = element("div", undefined, "metrics");
   const metricItems = [
-    [fmt(plan.targetGrams)+" g", "Alvo diário"],
-    [fmt(plan.totals.grams)+" g", "Distribuído"],
-    [fmt(plan.perMealGrams)+" g", "Distribuído por refeição · "+meals+"x"]
+    [fmt(plan.targetGrams)+" g", "Alvo do modelo"],
+    [fmt(plan.totals.grams)+" g", "Somatório selecionado"],
+    [fmt(plan.perMealGrams)+" g", "Por refeição simulada · "+meals+"x"]
   ];
   metricItems.forEach(([value, label]) => {
     const card = element("div", undefined, "metric");
     card.append(element("strong", value), element("span", label));
     metrics.append(card);
   });
+  root.append(element("p", "Simulação educativa: os números abaixo descrevem apenas o comportamento de um modelo matemático não validado; não são uma recomendação de quantidade para oferecer ao cão.", "callout"));
   root.append(metrics);
 
   if (incomplete) {
     const missingShare = ingredientGroups.filter(group => plan.missingGroups.includes(group.name)).reduce((sum, group) => sum + group.share, 0) * 100;
     const notice = element("div", undefined, "notice");
-    notice.append(element("strong", "Estimativa incompleta: faltam "+fmt(missingShare)+"% da porção-alvo"), document.createTextNode(" Grupos sem seleção: "+plan.missingGroups.join("; ")+". O valor distribuído não corresponde ao alvo diário."));
+    notice.append(element("strong", "Estimativa incompleta: faltam "+fmt(missingShare)+"% da porção-alvo"), document.createTextNode(" Grupos sem seleção: "+plan.missingGroups.join("; ")+". A simulação não representa a distribuição completa definida pelo próprio modelo."));
     root.append(notice);
   }
   if (pctInfo.warning) {
@@ -117,13 +118,13 @@ function renderResult(plan, pctInfo, meals, puppy) {
   if (puppy) {
     root.append(element("p", "Filhotes exigem formulação individual por veterinário, especialmente durante o crescimento.", "notice"));
   }
-  root.append(element("p", "Resultado parcial e educativo: sem suplementação vitamínico-mineral orientada por veterinário esta combinação não é dieta completa (ex.: cálcio).", "notice"));
+  root.append(element("p", "Este cálculo não avalia todos os nutrientes nem formula suplementos. Não é possível concluir que uma preparação seja completa ou adequada a partir destes resultados.", "notice"));
   if (incomplete) {
     root.append(element("p", "Energia omitida: a seleção está incompleta e a estimativa calórica seria apenas parcial.", "small"));
   } else {
     const energy = plan.energy;
     const metric = element("div", undefined, "metric energy-metric");
-    metric.append(element("strong", fmt(energy.kcal)+" kcal"), element("span", "Energia estimada/dia"));
+    metric.append(element("strong", fmt(energy.kcal)+" kcal"), element("span", "Energia calculada pelo modelo (não validada)"));
     root.append(metric);
     const distribution = element("p");
     distribution.append(element("strong", "Distribuição calórica aproximada: "), document.createTextNode(
@@ -138,7 +139,7 @@ function renderResult(plan, pctInfo, meals, puppy) {
   caption.className = "visually-hidden";
   const thead = document.createElement("thead");
   const header = document.createElement("tr");
-  ["Ingrediente", "g/dia", "g/ref.", "Prot. g", "Gord. g", "Carb. g", "Fibra g"].forEach(label => cell(header, "th", label, "col"));
+  ["Ingrediente", "g no modelo", "g/ref. simulada", "Prot. g", "Gord. g", "Carb. g", "Fibra g"].forEach(label => cell(header, "th", label, "col"));
   thead.append(header);
   const tbody = document.createElement("tbody");
   plan.rows.forEach(row => {
@@ -156,7 +157,7 @@ function renderResult(plan, pctInfo, meals, puppy) {
   wrap.append(table);
   root.append(wrap);
 
-  root.append(element("p", "Percentual aplicado: "+fmt(pctInfo.pct)+"% do peso informado. Estimativa heurística, sem validação clínica; composição varia conforme corte, preparo e fonte de dados.", "small"));
+  root.append(element("p", "Parâmetro aplicado pelo modelo: "+fmt(pctInfo.pct)+"% do peso informado. É uma regra heurística não validada clinicamente; não constitui meta nutricional. A composição varia conforme corte, preparo e origem dos dados.", "small"));
   root.append(element("p", "Valores de composição ilustrativos — fonte não verificada.", "small"));
   result.replaceChildren(root);
   heading.focus();
