@@ -17,8 +17,8 @@ Este documento será atualizado continuamente durante a fase. Pendências resolv
 ## Pendências que a IA pode resolver
 - [ ] Separar HTML, CSS, lógica de cálculo e dados em arquivos dedicados.
 - [ ] Remover interpolação HTML insegura; construir resultados com DOM APIs e `textContent`.
-- [ ] Criar testes unitários para percentuais, divisão por categoria, soma de macros e categorias ausentes.
-- [ ] Validar a aritmética e os limites/entradas inválidas; documentar pressupostos.
+- [x] Criar testes unitários para percentuais, divisão por categoria, soma de macros e categorias ausentes (Node.js `node:test`; CI configurada).
+- [x] Extrair cálculo percentual para módulo testável e validar limites/entradas inválidas nos testes. A fórmula de porção permanece heurística e sem validação clínica.
 - [ ] Conferir responsividade, labels, foco, contraste e navegação por teclado.
 - [ ] Adicionar fontes rastreáveis aos dados dos ingredientes, sem inventar códigos ou atribuições.
 - [ ] Revisar README, instruções locais e checklist de GitHub Pages.
@@ -38,4 +38,5 @@ Este documento será atualizado continuamente durante a fase. Pendências resolv
 - **31/10/2026:** primeiro protótipo web foi adicionado à branch de trabalho. Ainda não está validado para uso ou publicação.
 
 ## Histórico de pendências resolvidas
-- Nenhuma pendência técnica marcada como resolvida nesta abertura. Registrar aqui a data e o commit/resultado de cada resolução.
+- **31/10/2026:** extraído `estimatePercentage` para `src/calculations.js`, com testes de faixas adultas/filhotes e rejeição de valores inválidos; o app importa a função compartilhada. Evidência: commits `45a3833`, `acb001e`, `939e4b4`.
+- **31/10/2026:** adicionados testes `node:test`, script `npm test` e workflow GitHub Actions para push/PR. Evidência: `tests/calculations.test.js`, `package.json`, `.github/workflows/tests.yml` (commit `76a4a66`). Execução do CI ainda depende do GitHub Actions após o push; não declarar validação clínica.
