@@ -31,7 +31,7 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - [x] Corrigir quebras literais de Markdown no README e neste documento.
 - [x] Adicionar avisos educativos para suplementação, filhotes e fígado; adicionar metadados `source`/`verified` sem inventar fontes.
 - [x] Criar `.gitignore`, declarar Node.js mínimo 22 e documentar a duplicidade potencial de execuções do CI.
-- [ ] Executar `npm test` e `npm run check:contrast` no ambiente de CI ou local e registrar os resultados observados.
+- [x] Executar `npm test` e `npm run check:contrast` no GitHub Actions após a consolidação da `main` (13 testes aprovados; todos os pares de contraste verificados passaram).
 - [ ] Verificar no Chromium desktop (1100 px) e mobile (390 px), temas claro/escuro: alternância de campos, seleção vazia/parcial, limites, avisos, foco, console e ausência de rolagem horizontal.
 - [ ] Executar axe ou Lighthouse e corrigir violações críticas/sérias.
 - [ ] Confirmar cenário padrão e comparar valores exibidos antes/depois da interpolação.
@@ -47,7 +47,7 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - [ ] Revisar frequência/limite diário de fígado com profissional veterinário.
 - [ ] Resolver a inconsistência de preparo: `liver` permanece descrito como "Fígado bovino grelhado", embora o escopo da ferramenta fale em alimentos cozidos. Não alterar nome nem composição sem fonte.
 - [x] Preparar workflow de publicação estática pelo GitHub Actions.
-- [ ] Em `Settings > Pages`, selecionar `GitHub Actions` como fonte e confirmar a primeira implantação.
+- [ ] Em `Settings > Pages`, selecionar `GitHub Actions` como fonte e confirmar a primeira implantação. A tentativa automática anterior falhou porque o Pages ainda não estava habilitado.
 - [ ] Resolver eventuais divergências de referência (NRC/FEDIAF/AAFCO/WSAVA) com fontes primárias.
 
 ## Notas de implementação e limites
@@ -59,6 +59,15 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - O workflow de testes agora executa em `push` para `main` e em `pull_request` para `main`, rodando `npm test` e `npm run check:contrast`. O workflow de Pages só publica após push em `main` ou execução manual, e o deploy também repete as verificações.
 - A publicação está preparada por workflow, mas depende da seleção única de `GitHub Actions` em `Settings > Pages` e de uma execução bem-sucedida. O código está sob AGPL-3.0; a licença dos dados de composição continua sem comprovação.
 
+## Novas páginas e interface
+
+- [x] Criar guia educativo de alimentação natural cozida, com limites explícitos e orientação para avaliação individual.
+- [x] Criar página de referências bibliográficas em ordem alfabética, organizada segundo ABNT NBR 6023:2025.
+- [x] Criar folha de estilos compartilhada e seletor de tema nas três páginas.
+- [x] Definir modo escuro como padrão; persistir preferência do visitante no navegador.
+- [ ] Revisar editorialmente o guia com médico-veterinário ou veterinário nutrólogo antes de divulgar como orientação técnica validada.
+- [ ] Conferir cada referência e a pertinência de cada citação no momento da revisão técnica.
+
 ## Registro de decisões
 
 - **31/10/2026:** escopo inicial restrito à AN cozida, sem ossos. O app é educativo, não prescreve dieta nem calcula doses de suplementos.
@@ -66,6 +75,7 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - **31/10/2026:** primeiro protótipo web foi adicionado à branch de trabalho. O conteúdo consolidado está em `main`; a validação veterinária e a inspeção visual continuam pendentes.
 - **31/10/2026:** a interpolação linear foi implementada apenas na forma prescrita no relatório; a alternativa energética continua dependente de decisão humana.
 - **31/10/2026:** não foram alterados os valores nutricionais de composição nem as participações (`share`) dos grupos.
+- **31/10/2026:** acrescentadas páginas de guia educativo e referências bibliográficas em ABNT NBR 6023:2025; criada navegação comum e preferência de tema claro/escuro com modo escuro padrão.
 
 ## Histórico de pendências resolvidas
 

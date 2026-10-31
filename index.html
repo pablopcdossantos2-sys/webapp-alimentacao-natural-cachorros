@@ -3,63 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f5f7ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111a15" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#111a15">
 <link rel="icon" href="data:,">
+<script>
+try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.dataset.theme=saved==="light"?"light":"dark"}catch{document.documentElement.dataset.theme="dark"}
+</script>
+<link rel="stylesheet" href="./src/site.css">
 <title>Prato de Cão — Calculadora educativa</title>
-<style>
-:root{color-scheme:light dark;--bg:#f5f7ef;--surface:#fff;--ink:#1d3026;--muted:#56665b;--line:#dce5d8;--green:#286b48;--on-green:#fff;--soft:#e8f1e6;--warn:#fff1d7;--warnink:#7b4c00}
-@media(prefers-color-scheme:dark){:root{--bg:#111a15;--surface:#1a261f;--ink:#eef6ed;--muted:#b2c2b4;--line:#33473a;--green:#8fd2a5;--on-green:#0f1f16;--soft:#263b2d;--warn:#3e301a;--warnink:#ffd78a}}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
-header,main,footer{max-width:980px;margin:auto;padding:1.1rem}
-header{padding-top:2rem}
-.brand{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
-h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;letter-spacing:-.04em;margin:.45rem 0 1rem}
-h2{font-size:1.2rem;margin:0 0 1rem}
-h3{font-size:1.1rem;margin:.2rem 0 1rem;scroll-margin-top:1rem}
-.lead{max-width:66ch;color:var(--muted)}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.2rem;box-shadow:0 6px 24px #142a1408}
-label{display:block;font-weight:650;margin:.8rem 0 .35rem}
-input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.65rem;width:100%}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:.2rem 1rem}
-.hint{font-size:.86rem;color:var(--muted)}
-fieldset{border:1px solid var(--line);border-radius:12px;margin:.8rem 0;padding:.6rem .8rem}
-legend{font-weight:750;padding:0 .3rem}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .6rem}
-.checks label{display:flex;align-items:flex-start;gap:.5rem;font-weight:450;margin:.25rem 0}
-.checks input{width:auto;margin-top:.3rem;accent-color:var(--green)}
-button{border:0;border-radius:12px;background:var(--green);color:var(--on-green);padding:.85rem 1.2rem;font:inherit;font-weight:750;cursor:pointer;width:100%;margin-top:.6rem}
-.result{margin-top:1rem}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
-.metric{background:var(--soft);border-radius:12px;padding:.8rem;min-width:0}
-.metric strong{display:block;font-size:1.15rem;overflow-wrap:anywhere}
-.metric span{font-size:.8rem;color:var(--muted)}
-.energy-metric{margin-top:.6rem}
-table{border-collapse:collapse;width:100%;font-size:.88rem}
-caption{text-align:left}
-th,td{text-align:left;padding:.55rem;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--muted)}
-.table-wrap{overflow-x:auto;margin:.7rem 0}
-.notice{background:var(--warn);color:var(--warnink);border-radius:12px;padding:.9rem;margin:.7rem 0}
-.notice strong{display:block}
-.small{font-size:.85rem;color:var(--muted)}
-footer{color:var(--muted);font-size:.85rem}
-.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-[hidden]{display:none!important}
-:where(input,select,button,summary):focus-visible{outline:3px solid var(--green);outline-offset:3px}
-@media(max-width:720px){.layout{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}.panel{padding:1rem}}
-@media(max-width:420px){.fields,.checks{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
-</style>
 </head>
 <body>
 <header>
-  <div class="brand">Prato de Cão · Ferramenta educativa</div>
-  <h1>Alimentação natural,<br>com mais clareza.</h1>
-  <p class="lead">Estime porções e macronutrientes de uma combinação de alimentos cozidos. Os valores são aproximados e não constituem prescrição nutricional.</p>
+  <div class="topbar">
+    <a class="brand" href="./index.html">Prato de Cão</a>
+    <nav class="site-nav" aria-label="Navegação principal">
+      <a href="./index.html" aria-current="page">Calculadora</a>
+      <a href="./guia-alimentacao-natural.html">Guia educativo</a>
+      <a href="./referencias.html">Referências</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">Ativar modo claro</button>
+    </nav>
+  </div>
+  <div class="hero">
+    <div class="eyebrow">Ferramenta educativa</div>
+    <h1>Alimentação natural,<br>com mais clareza.</h1>
+    <p class="lead">Estime porções e macronutrientes de uma combinação de alimentos cozidos. Os valores são aproximados e não constituem prescrição nutricional.</p>
+  </div>
 </header>
 <main>
   <div class="layout">
@@ -87,7 +54,7 @@ footer{color:var(--muted);font-size:.85rem}
         <h2 style="margin-top:1.3rem">02 / Ingredientes cozidos</h2>
         <p class="hint" id="ingredientHint">Selecione ao menos um ingrediente. A porção de cada grupo será dividida igualmente entre os itens selecionados; grupos sem seleção deixam o cálculo incompleto.</p>
         <div id="ingredientGroups"></div>
-        <button type="submit">Calcular estimativa</button>
+        <button class="primary" type="submit">Calcular estimativa</button>
       </form>
     </section>
     <section class="panel" aria-labelledby="resultTitle">
@@ -99,11 +66,16 @@ footer{color:var(--muted);font-size:.85rem}
     <h2 id="infoTitle">Informações essenciais</h2>
     <div class="notice"><strong>Suplementação é indispensável.</strong> Alimentação natural cozida sem ossos precisa de suplementação vitamínico-mineral adequada para ser completa. Esta calculadora não define doses de suplementos nem verifica todos os nutrientes.</div>
     <p>Use somente alimentos apropriados e devidamente cozidos. Não ofereça ossos cozidos. Cães com doenças crônicas, gestantes/lactantes, neonatos e casos que exigem manejo de peso precisam de avaliação veterinária individual.</p>
-    <details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia, carambola e xilitol podem ser tóxicos para cães. Em caso de ingestão, procure atendimento veterinário.</p></details>
+    <details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia e xilitol podem ser perigosos para cães. Em caso de ingestão, procure orientação veterinária imediatamente.</p></details>
     <details><summary><strong>Transição alimentar</strong></summary><p>A mudança de alimentação deve ser planejada com profissional. Uma transição gradual pode reduzir desconfortos, mas o ritmo depende do animal e de sua condição clínica.</p></details>
+    <p class="small">Conheça os fundamentos e os limites da alimentação natural cozida no <a href="./guia-alimentacao-natural.html">guia educativo</a> e consulte as <a href="./referencias.html">referências bibliográficas</a>.</p>
   </section>
 </main>
-<footer>Estimativa educativa — não substitui médico-veterinário ou veterinário nutrólogo. Os resultados não devem ser interpretados como dieta completa e balanceada. Valores de composição e parâmetros exigem validação técnica e revisão das fontes antes de uso clínico.</footer>
+<footer>
+  <nav aria-label="Navegação do rodapé"><a href="./guia-alimentacao-natural.html">Guia educativo</a><a href="./referencias.html">Referências bibliográficas (ABNT)</a></nav>
+  Estimativa educativa — não substitui médico-veterinário ou veterinário nutrólogo. Os resultados não devem ser interpretados como dieta completa e balanceada. Valores de composição e parâmetros exigem validação técnica e revisão das fontes antes de uso clínico.
+</footer>
 <script type="module" src="./src/app.js"></script>
+<script type="module" src="./src/theme.js"></script>
 </body>
 </html>
