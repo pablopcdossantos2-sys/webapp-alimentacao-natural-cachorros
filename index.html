@@ -25,7 +25,7 @@ try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.
   <div class="hero">
     <div class="eyebrow">Ferramenta educativa</div>
     <h1>Alimentação natural,<br>com mais clareza.</h1>
-    <p class="lead">Estime porções e macronutrientes de uma combinação de alimentos cozidos. Os valores são aproximados e não constituem prescrição nutricional.</p>
+    <p class="lead">Explore uma simulação matemática de ingredientes cozidos e veja como o modelo distribui quantidades e estima macronutrientes. Os resultados são ilustrativos, não validados e não devem ser usados para alimentar seu cão.</p>
   </div>
 </header>
 <main>
@@ -47,12 +47,13 @@ try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.
         </div>
         <div class="fields">
           <div><label for="meals">Refeições por dia</label><select id="meals"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></div>
-          <div><label for="manual">Percentual manual (%)</label><input id="manual" type="number" step=".1" placeholder="Opcional" aria-describedby="profileHint"></div>
+          <div><label for="manual">Parâmetro manual do modelo (%)</label><input id="manual" type="number" step=".1" placeholder="Opcional" aria-describedby="profileHint"></div>
         </div>
-        <p class="hint" id="profileHint">O percentual é uma aproximação inicial baseada em faixas de peso/idade; necessidades individuais variam. Confirme ajustes com médico-veterinário.</p>
+        <p class="hint" id="profileHint">O parâmetro percentual é uma heurística interna baseada em peso e fase de vida. Não é uma recomendação de porção nem uma estimativa clínica de necessidade energética.</p>
         <p id="puppyNotice" class="notice" hidden>Filhotes exigem formulação individual por veterinário, especialmente durante o crescimento.</p>
         <h2 style="margin-top:1.3rem">02 / Ingredientes cozidos</h2>
-        <p class="hint" id="ingredientHint">Selecione ao menos um ingrediente. A porção de cada grupo será dividida igualmente entre os itens selecionados; grupos sem seleção deixam o cálculo incompleto.</p>
+        <p class="hint" id="ingredientHint">Selecione ao menos um ingrediente. Para fins de demonstração, a quantidade interna de cada grupo é dividida igualmente entre os itens selecionados.</p>
+        <p class="hint" id="shareDisclaimer">A distribuição entre grupos é uma escolha matemática do protótipo. Não representa proporções recomendadas de carnes, vísceras, carboidratos ou vegetais para cães.</p>
         <div id="ingredientGroups"></div>
         <button class="primary" type="submit">Calcular estimativa</button>
       </form>
@@ -64,8 +65,8 @@ try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.
   </div>
   <section class="panel result" aria-labelledby="infoTitle">
     <h2 id="infoTitle">Informações essenciais</h2>
-    <div class="notice"><strong>Suplementação é indispensável.</strong> Alimentação natural cozida sem ossos precisa de suplementação vitamínico-mineral adequada para ser completa. Esta calculadora não define doses de suplementos nem verifica todos os nutrientes.</div>
-    <p>Use somente alimentos apropriados e devidamente cozidos. Não ofereça ossos cozidos. Cães com doenças crônicas, gestantes/lactantes, neonatos e casos que exigem manejo de peso precisam de avaliação veterinária individual.</p>
+    <div class="notice"><strong>Esta calculadora não formula uma dieta.</strong> Não verifica todos os nutrientes, não determina suplementos e usa parâmetros e dados de composição ainda não validados. Dietas caseiras precisam de formulação individual por profissional qualificado.</div>
+    <p>O webapp trata de preparações cozidas. O cozimento adequado reduz riscos microbiológicos, mas não garante equilíbrio nutricional. Não ofereça ossos cozidos. Cães com doenças crônicas, filhotes, gestantes/lactantes, neonatos e animais que exigem manejo de peso precisam de avaliação veterinária individual.</p>
     <details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia e xilitol podem ser perigosos para cães. Em caso de ingestão, procure orientação veterinária imediatamente.</p></details>
     <details><summary><strong>Transição alimentar</strong></summary><p>A mudança de alimentação deve ser planejada com profissional. Uma transição gradual pode reduzir desconfortos, mas o ritmo depende do animal e de sua condição clínica.</p></details>
     <p class="small">Conheça os fundamentos e os limites da alimentação natural cozida no <a href="./guia-alimentacao-natural.html">guia educativo</a> e consulte as <a href="./referencias.html">referências bibliográficas</a>.</p>
