@@ -1,15 +1,24 @@
-// WCAG AA checks for text/background pairs currently used by the UI.
+// WCAG AA checks for readable text pairs and accent labels used by the visual system.
 const pairs = [
-  ["texto muted claro / soft claro", "#56665b", "#e8f1e6", 4.5],
-  ["texto muted claro / fundo claro", "#56665b", "#f5f7ef", 4.5],
-  ["botão claro", "#ffffff", "#286b48", 4.5],
-  ["botão escuro", "#0f1f16", "#8fd2a5", 4.5],
-  ["aviso claro", "#7b4c00", "#fff1d7", 4.5],
-  ["aviso escuro", "#ffd78a", "#3e301a", 4.5],
-  ["texto muted escuro / soft escuro", "#b2c2b4", "#263b2d", 4.5],
-  ["texto muted escuro / fundo escuro", "#b2c2b4", "#111a15", 4.5],
-  ["texto principal claro", "#1d3026", "#ffffff", 4.5],
-  ["texto principal escuro", "#eef6ed", "#1a261f", 4.5]
+  ["texto secundário claro / superfície", "#596579", "#ffffff", 4.5],
+  ["texto secundário claro / fundo suave", "#596579", "#f0eee8", 4.5],
+  ["texto secundário claro / fundo geral", "#596579", "#f6f4ef", 4.5],
+  ["texto principal claro", "#222b3a", "#ffffff", 4.5],
+  ["botão claro", "#ffffff", "#087e75", 4.5],
+  ["coral claro", "#b64b45", "#ffffff", 4.5],
+  ["açafrão claro", "#805400", "#ffffff", 4.5],
+  ["violeta claro", "#7053b8", "#ffffff", 4.5],
+  ["azul claro", "#315f99", "#ffffff", 4.5],
+  ["aviso claro", "#805000", "#fff0d3", 4.5],
+  ["texto secundário escuro / superfície", "#b8c4d4", "#1c2633", 4.5],
+  ["texto secundário escuro / fundo suave", "#b8c4d4", "#253548", 4.5],
+  ["texto principal escuro", "#f1f4f8", "#1c2633", 4.5],
+  ["botão escuro", "#122722", "#73dfcf", 4.5],
+  ["coral escuro", "#ff9488", "#1c2633", 4.5],
+  ["açafrão escuro", "#f3c66b", "#1c2633", 4.5],
+  ["violeta escuro", "#b9a4ff", "#1c2633", 4.5],
+  ["azul escuro", "#91bdff", "#1c2633", 4.5],
+  ["aviso escuro", "#ffdb9b", "#44341f", 4.5]
 ];
 
 function luminance(hex) {
