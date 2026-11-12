@@ -9,7 +9,7 @@
 try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.dataset.theme=saved==="light"?"light":"dark"}catch{document.documentElement.dataset.theme="dark"}
 </script>
 <link rel="stylesheet" href="./src/site.css">
-<title>Prato de Cão — Calculadora educativa</title>
+<title>Prato de Cão — Perfil e necessidades energéticas</title>
 </head>
 <body>
 <header>
@@ -23,58 +23,147 @@ try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.
     </nav>
   </div>
   <div class="hero">
-    <div class="eyebrow">Ferramenta educativa</div>
-    <h1>Alimentação natural,<br>com mais clareza.</h1>
-    <p class="lead">Explore uma simulação matemática de ingredientes cozidos e veja como o modelo distribui quantidades e estima macronutrientes. Os resultados são ilustrativos, não validados e não devem ser usados para alimentar seu cão.</p>
+    <div class="eyebrow">Etapa 01 · Avaliação inicial</div>
+    <h1>Antes da receita,<br>entenda o cão.</h1>
+    <p class="lead">Registre o perfil do animal e estime sua necessidade energética de referência. Esta é a primeira etapa de um sistema de apoio à formulação de refeições caseiras cozidas — ainda não é um gerador de receitas nem uma recomendação de porções.</p>
   </div>
 </header>
 <main>
   <div class="layout">
     <section class="panel" aria-labelledby="profileTitle">
       <h2 id="profileTitle">01 / Perfil do cão</h2>
-      <form id="form" novalidate>
+      <form id="energyForm" novalidate>
         <div class="fields">
-          <div><label for="phase">Fase</label><select id="phase"><option value="adult">Adulto</option><option value="puppy">Filhote</option></select></div>
-          <div><label for="weight">Peso (kg)</label><input id="weight" type="number" step=".1" value="8" required aria-describedby="profileHint"></div>
-        </div>
-        <div id="puppyFields" hidden class="fields">
-          <div><label for="age">Idade (meses)</label><input id="age" type="number" step="1" value="4" disabled></div>
-          <div><label for="adultWeight">Peso adulto esperado (kg)</label><input id="adultWeight" type="number" step=".1" value="15" disabled></div>
-        </div>
-        <div id="adultFields" class="fields">
-          <div><label for="neutered">Castração</label><select id="neutered"><option value="yes">Castrado(a)</option><option value="no">Não castrado(a)</option></select></div>
-          <div><label for="activity">Atividade</label><select id="activity"><option value="low">Baixa</option><option value="moderate" selected>Moderada</option><option value="high">Alta</option></select></div>
+          <div>
+            <label for="weightKg">Peso atual (kg)</label>
+            <input id="weightKg" type="number" min="0.5" max="120" step="0.1" placeholder="Ex.: 5" required>
+          </div>
+          <div>
+            <label for="ageYears">Idade (anos)</label>
+            <input id="ageYears" type="number" min="0.1" max="30" step="0.1" placeholder="Ex.: 2,5">
+          </div>
         </div>
         <div class="fields">
-          <div><label for="meals">Refeições por dia</label><select id="meals"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></div>
-          <div><label for="manual">Parâmetro manual do modelo (%)</label><input id="manual" type="number" step=".1" placeholder="Opcional" aria-describedby="profileHint"></div>
+          <div>
+            <label for="breed">Raça (opcional)</label>
+            <input id="breed" type="text" maxlength="80" placeholder="Ex.: Chihuahua">
+          </div>
+          <div>
+            <label for="lifeStage">Fase/situação atual</label>
+            <select id="lifeStage">
+              <option value="adult" selected>Adulto saudável</option>
+              <option value="puppy">Filhote / crescimento</option>
+              <option value="senior">Idoso</option>
+              <option value="gestation">Gestação</option>
+              <option value="lactation">Lactação</option>
+              <option value="clinical">Doença ou dieta terapêutica</option>
+            </select>
+          </div>
         </div>
-        <p class="hint" id="profileHint">O parâmetro percentual é uma heurística interna baseada em peso e fase de vida. Não é uma recomendação de porção nem uma estimativa clínica de necessidade energética.</p>
-        <p id="puppyNotice" class="notice" hidden>Filhotes exigem formulação individual por veterinário, especialmente durante o crescimento.</p>
-        <h2 style="margin-top:1.3rem">02 / Ingredientes cozidos</h2>
-        <p class="hint" id="ingredientHint">Selecione ao menos um ingrediente. Para fins de demonstração, a quantidade interna de cada grupo é dividida igualmente entre os itens selecionados.</p>
-        <p class="hint" id="shareDisclaimer">A distribuição entre grupos é uma escolha matemática do protótipo. Não representa proporções recomendadas de carnes, vísceras, carboidratos ou vegetais para cães.</p>
-        <div id="ingredientGroups"></div>
-        <button class="primary" type="submit">Calcular estimativa</button>
+        <div id="adultEnergyFields">
+          <h3>Parâmetros de estimativa para adultos</h3>
+          <div class="fields">
+            <div>
+              <label for="merckProfile">Perfil usado no cálculo Merck</label>
+              <select id="merckProfile">
+                <option value="neutered" selected>Adulto castrado — 1,6 × RER</option>
+                <option value="intact">Adulto inteiro — 1,8 × RER</option>
+                <option value="obesityProne">Propenso à obesidade — 1,4 × RER</option>
+              </select>
+            </div>
+            <div>
+              <label for="activity">Atividade diária (FEDIAF 2025)</label>
+              <select id="activity">
+                <option value="low">Pouca: menos de 1 h/dia</option>
+                <option value="moderateLow" selected>Moderada: 1–3 h/dia, baixo impacto</option>
+                <option value="moderateHigh">Moderada: 1–3 h/dia, alto impacto</option>
+                <option value="high">Alta: 3–6 h/dia (cão de trabalho)</option>
+              </select>
+            </div>
+          </div>
+          <p class="hint">O fator de 1,4 é uma categoria própria para cães propensos à obesidade, não uma consequência automática da castração ou de um escore corporal elevado. Selecione-o apenas quando esse perfil tiver sido avaliado.</p>
+        </div>
+        <h3>Condição corporal e muscular</h3>
+        <div class="fields">
+          <div>
+            <label for="bcsScore">Escore de condição corporal (1–9)</label>
+            <select id="bcsScore">
+              <option value="">Não avaliado</option>
+              <option value="1">1 — muito magro</option>
+              <option value="2">2 — magro</option>
+              <option value="3">3 — abaixo do ideal</option>
+              <option value="4">4 — ideal</option>
+              <option value="5">5 — ideal</option>
+              <option value="6">6 — acima do ideal</option>
+              <option value="7">7 — sobrepeso</option>
+              <option value="8">8 — obeso</option>
+              <option value="9">9 — obesidade acentuada</option>
+            </select>
+          </div>
+          <div>
+            <label for="mcs">Condição muscular</label>
+            <select id="mcs">
+              <option value="notAssessed" selected>Não avaliada</option>
+              <option value="normal">Massa muscular adequada</option>
+              <option value="mildLoss">Perda muscular leve</option>
+              <option value="moderateLoss">Perda muscular moderada</option>
+              <option value="severeLoss">Perda muscular grave</option>
+            </select>
+          </div>
+        </div>
+        <div class="fields">
+          <div>
+            <label for="meals">Refeições por dia (para dividir a referência)</label>
+            <select id="meals">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint">Raça, idade, escore corporal e condição muscular ficam registrados no perfil, mas não são convertidos em multiplicadores automáticos nesta versão. O peso usado é o peso atual informado; não estimamos peso ideal por conta própria.</p>
+        <button class="primary" type="submit">Calcular referências energéticas</button>
       </form>
     </section>
     <section class="panel" aria-labelledby="resultTitle">
-      <h2 id="resultTitle">03 / Resultado estimado</h2>
-      <div id="result" aria-live="polite" aria-atomic="true"><p class="hint">Preencha o perfil e selecione ingredientes para ver o cálculo.</p></div>
+      <h2 id="resultTitle">02 / Necessidade energética</h2>
+      <div id="result" aria-live="polite" aria-atomic="true">
+        <p class="hint">Informe o peso e os dados disponíveis para visualizar o RER e, para cães adultos saudáveis, duas estimativas independentes de energia diária.</p>
+      </div>
     </section>
   </div>
-  <section class="panel result" aria-labelledby="infoTitle">
-    <h2 id="infoTitle">Informações essenciais</h2>
-    <div class="notice"><strong>Esta calculadora não formula uma dieta.</strong> Não verifica todos os nutrientes, não determina suplementos e usa parâmetros e dados de composição ainda não validados. Dietas caseiras precisam de formulação individual por profissional qualificado.</div>
-    <p>O webapp trata de preparações cozidas. O cozimento adequado reduz riscos microbiológicos, mas não garante equilíbrio nutricional. Não ofereça ossos cozidos. Cães com doenças crônicas, filhotes, gestantes/lactantes, neonatos e animais que exigem manejo de peso precisam de avaliação veterinária individual.</p>
-    <details><summary><strong>Alimentos perigosos — lembrete</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia e xilitol podem ser perigosos para cães. Em caso de ingestão, procure orientação veterinária imediatamente.</p></details>
-    <details><summary><strong>Transição alimentar</strong></summary><p>A mudança de alimentação deve ser planejada com profissional. Uma transição gradual pode reduzir desconfortos, mas o ritmo depende do animal e de sua condição clínica.</p></details>
-    <p class="small">Conheça os fundamentos e os limites da alimentação natural cozida no <a href="./guia-alimentacao-natural.html">guia educativo</a> e consulte as <a href="./referencias.html">referências bibliográficas</a>.</p>
+  <section class="panel result" aria-labelledby="scopeTitle">
+    <h2 id="scopeTitle">O que esta etapa entrega</h2>
+    <div class="guide-grid">
+      <article class="guide-card guide-card--coral">
+        <h3>Perfil individual</h3>
+        <p>Peso, idade, raça informada, fase de vida, condição corporal e muscular, perfil metabólico de referência e atividade.</p>
+      </article>
+      <article class="guide-card guide-card--blue">
+        <h3>Referência de energia</h3>
+        <p>RER e, apenas para adultos saudáveis, estimativas iniciais independentes pelo fator Merck e pela tabela de atividade FEDIAF 2025.</p>
+      </article>
+      <article class="guide-card guide-card--gold">
+        <h3>O que ainda não faz</h3>
+        <p>Não calcula gramas de ingredientes, macros, vitaminas, minerais, aminoácidos, ácidos graxos, relações entre nutrientes ou doses de suplementos.</p>
+      </article>
+      <article class="guide-card guide-card--violet">
+        <h3>Próxima etapa</h3>
+        <p>Construir uma base de requisitos nutricionais validada e rastreável antes de transformar energia em uma receita de refeição caseira.</p>
+      </article>
+    </div>
+    <div class="notice"><strong>Não use o resultado como prescrição alimentar.</strong> Uma estimativa de kcal não informa quais alimentos, em quais quantidades ou com quais suplementos tornam uma dieta completa. A formulação de refeições caseiras precisa considerar todos os nutrientes essenciais e ser revisada por médico-veterinário com competência em nutrição.</div>
+    <p>O projeto está sendo desenvolvido para apoiar preparações cozidas em casa. O cozimento adequado reduz riscos microbiológicos, mas não garante equilíbrio nutricional. Não ofereça ossos cozidos. Cães com doenças, filhotes, idosos frágeis, gestantes/lactantes e animais com necessidades especiais precisam de avaliação individual.</p>
+    <details><summary><strong>Alimentos potencialmente perigosos</strong></summary><p>Cebola, alho-poró, cebolinha, uvas e passas, chocolate/cacau, macadâmia e xilitol podem ser perigosos para cães. Em caso de ingestão, procure orientação veterinária imediatamente.</p></details>
+    <p class="small">Consulte o <a href="./guia-alimentacao-natural.html">guia educativo</a>, as <a href="./referencias.html">referências bibliográficas</a> e o <a href="./docs/roteiro-formulacao-refeicoes-caseiras.md">roteiro técnico das próximas etapas</a>.</p>
   </section>
 </main>
 <footer>
   <nav aria-label="Navegação do rodapé"><a href="./guia-alimentacao-natural.html">Guia educativo</a><a href="./referencias.html">Referências bibliográficas (ABNT)</a></nav>
-  Estimativa educativa — não substitui médico-veterinário ou veterinário nutrólogo. Os resultados não devem ser interpretados como dieta completa e balanceada. Valores de composição e parâmetros exigem validação técnica e revisão das fontes antes de uso clínico.
+  Estimativas iniciais, não prescrição. A ferramenta ainda não formula dietas completas nem fornece quantidades alimentares. A revisão técnica veterinária permanece obrigatória antes do uso em decisões alimentares.
 </footer>
 <script type="module" src="./src/app.js"></script>
 <script type="module" src="./src/theme.js"></script>
