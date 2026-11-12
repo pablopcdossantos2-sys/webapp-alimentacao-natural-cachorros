@@ -146,16 +146,17 @@ try{const saved=localStorage.getItem("pratoDeCaoTema");document.documentElement.
 
   <section id="calculadora">
     <h2>9. O que a calculadora Prato de Cão faz — e o que não faz</h2>
-    <p>A calculadora executa uma simulação matemática com parâmetros e dados de composição ilustrativos. Ela divide uma quantidade calculada pelo próprio modelo entre grupos e ingredientes selecionados e exibe estimativas de gramas e macronutrientes. O resultado serve apenas para demonstrar o funcionamento do cálculo.</p>
+    <p>O módulo atual registra informações do cão e, para adultos saudáveis, estima referências iniciais de necessidade energética por dois métodos independentes: RER/MER com fatores do Merck Veterinary Manual e uma referência por nível de atividade da FEDIAF 2025. A condição corporal e muscular é registrada para contextualizar a avaliação, não para produzir ajustes automáticos.</p>
     <ul>
-      <li><strong>Não formula dieta completa:</strong> não avalia todos os nutrientes essenciais, não calcula uma suplementação e não verifica adequação a padrões nutricionais.</li>
-      <li><strong>Não estima necessidades clínicas:</strong> seus percentuais e parâmetros são heurísticos e não foram validados clinicamente.</li>
-      <li><strong>Não usa uma base nutricional verificada:</strong> os valores dos ingredientes continuam ilustrativos e sem fonte rastreável confirmada.</li>
-      <li><strong>Não recomenda proporções por grupo:</strong> as divisões internas entre carnes, vísceras, carboidratos e vegetais são escolhas do modelo de demonstração, não recomendações nutricionais.</li>
-      <li><strong>Não determina quanto oferecer ao cão:</strong> “alvo”, gramas por dia e gramas por refeição são rótulos do cálculo, não uma porção prescrita.</li>
+      <li><strong>Não formula dieta completa:</strong> não calcula aminoácidos, ácidos graxos, vitaminas, minerais, fibras, relações entre nutrientes ou suplementos.</li>
+      <li><strong>Não calcula gramas de ingredientes:</strong> as estimativas em kcal não são convertidas em quantidades de carne, vísceras, carboidratos, vegetais ou outros alimentos.</li>
+      <li><strong>Não estima uma meta clínica individual:</strong> os métodos são pontos de partida e precisam ser confrontados com peso, BCS, MCS, histórico e resposta do animal.</li>
+      <li><strong>Não estima MER para todas as fases:</strong> filhotes, idosos, gestação, lactação e condições clínicas recebem apenas o RER de repouso nesta versão.</li>
+      <li><strong>Não aplica multiplicadores por raça:</strong> a raça é registrada para contextualizar o perfil, mas não altera automaticamente a equação.</li>
     </ul>
-    <div class="callout"><strong>Não use os resultados para alimentar seu cão.</strong> Antes de oferecer uma dieta caseira como alimentação principal, obtenha uma formulação individual elaborada ou revisada por médico-veterinário com competência em nutrição veterinária.</div>
-    <p><a href="./index.html">Conhecer a calculadora demonstrativa</a> · <a href="./referencias.html">Consultar as referências bibliográficas</a></p>
+    <div class="callout"><strong>Não use os números como prescrição alimentar.</strong> Antes de oferecer uma dieta caseira como alimentação principal, obtenha uma formulação individual elaborada ou revisada por médico-veterinário com competência em nutrição veterinária.</div>
+    <p>O objetivo das próximas etapas é desenvolver uma base de requisitos nutricionais, uma base rastreável de composição de ingredientes e um mecanismo de formulação quantitativa que só libere receitas após revisão técnica e validação.</p>
+    <p><a href="./index.html">Conhecer o módulo de perfil e energia</a> · <a href="./referencias.html">Consultar as referências bibliográficas</a></p>
   </section>
 </main>
 <footer>
