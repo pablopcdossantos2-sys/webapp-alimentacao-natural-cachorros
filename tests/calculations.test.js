@@ -5,6 +5,7 @@ import {
   resolvePercentage, distributeIngredients, sumMacros, missingGroups, LIMITS
 } from "../src/calculations.js";
 import { ingredientGroups } from "../src/ingredients.js";
+import { calculateEnergyNeeds, validateEnergyProfile } from "../src/energy.js";
 
 const allIds = new Set(ingredientGroups.flatMap(group => group.items.map(item => item.id)));
 
@@ -118,4 +119,58 @@ test("ingredient dataset keeps numeric composition unchanged and adds provenance
     assert.ok(Object.hasOwn(item,"source"));
     if (item.source !== null) assert.equal(item.verified,true);
   }
+});
+
+
+const validEnergyProfile = {
+  lifeStage: "adult", weightKg: 5, ageYears: 2.5, breed: "Chihuahua",
+  merckProfile: "neutered", activity: "moderateLow",
+  bodyConditionScore: 5, muscleCondition: "normal", meals: 2
+};
+
+test("energy module calculates RER and independent adult Merck/FEDIAF estimates", () => {
+  const needs = calculateEnergyNeeds(validEnergyProfile);
+  assert.equal(needs.status, "adult");
+  assert.ok(Math.abs(needs.rerKcalDay - 234.1) < 0.2);
+  assert.ok(Math.abs(needs.merck.kcalDay - 374.5) < 0.5);
+  assert.ok(Math.abs(needs.fediaf.minKcalDay - 367.8) < 0.5);
+  assert.equal(needs.fediaf.minKcalDay, needs.fediaf.maxKcalDay);
+  assert.ok(Math.abs(needs.merck.kcalPerMeal * 2 - needs.merck.kcalDay) < 1e-9);
+});
+
+test("high FEDIAF activity returns a range instead of a false point estimate", () => {
+  const needs = calculateEnergyNeeds({ ...validEnergyProfile, activity: "high" });
+  assert.equal(needs.fediaf.minRate, 150);
+  assert.equal(needs.fediaf.maxRate, 175);
+  assert.ok(needs.fediaf.maxKcalDay > needs.fediaf.minKcalDay);
+});
+
+test("puppies, senior dogs and clinical situations receive RER only, not adult MER", () => {
+  for (const lifeStage of ["puppy", "senior", "gestation", "lactation", "clinical"]) {
+    const needs = calculateEnergyNeeds({ ...validEnergyProfile, lifeStage });
+    assert.equal(needs.status, "individualAssessmentRequired");
+    assert.ok(needs.rerKcalDay > 0);
+    assert.equal(Object.hasOwn(needs, "merck"), false);
+    assert.equal(Object.hasOwn(needs, "fediaf"), false);
+  }
+});
+
+test("energy profile validation rejects invalid weight, score, stage and activity", () => {
+  assert.equal(validateEnergyProfile(validEnergyProfile).ok, true);
+  assert.equal(validateEnergyProfile({ ...validEnergyProfile, weightKg: 0 }).field, "weightKg");
+  assert.equal(validateEnergyProfile({ ...validEnergyProfile, bodyConditionScore: 10 }).field, "bcsScore");
+  assert.equal(validateEnergyProfile({ ...validEnergyProfile, lifeStage: "unknown" }).field, "lifeStage");
+  assert.equal(validateEnergyProfile({ ...validEnergyProfile, activity: "extreme" }).field, "activity");
+  assert.equal(validateEnergyProfile({ ...validEnergyProfile, meals: 7 }).field, "meals");
+  assert.equal(validateEnergyProfile({ ...validEnergyProfile, ageYears: 31 }).field, "ageYears");
+});
+
+test("breed and body scores do not silently alter energy calculations", () => {
+  const base = calculateEnergyNeeds(validEnergyProfile);
+  const changedDescription = calculateEnergyNeeds({
+    ...validEnergyProfile, breed: "Outra raça", bodyConditionScore: 8,
+    muscleCondition: "mildLoss"
+  });
+  assert.equal(changedDescription.merck.kcalDay, base.merck.kcalDay);
+  assert.equal(changedDescription.fediaf.minKcalDay, base.fediaf.minKcalDay);
 });
