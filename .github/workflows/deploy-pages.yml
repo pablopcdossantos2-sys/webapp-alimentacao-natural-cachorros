@@ -42,7 +42,7 @@ jobs:
         run: |
           mkdir -p dist/src
           cp index.html guia-alimentacao-natural.html referencias.html dist/
-          cp src/app.js src/calculations.js src/ingredients.js src/theme.js src/site.css dist/src/
+          cp src/app.js src/calculations.js src/energy.js src/ingredients.js src/theme.js src/site.css dist/src/
           touch dist/.nojekyll
 
       - name: Upload site artifact
