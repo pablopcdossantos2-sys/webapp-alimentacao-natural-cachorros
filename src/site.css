@@ -358,3 +358,28 @@ footer nav { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: .7rem; }
 .guide-steps li{counter-increment:guide-step;position:relative;padding:.8rem .9rem .8rem 3.2rem;margin:0!important;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
 .guide-steps li::before{content:counter(guide-step);position:absolute;left:.85rem;top:.72rem;display:grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:9px;background:color-mix(in srgb,var(--brand) 16%,var(--surface));color:var(--brand);font-weight:850}
 @media(max-width:560px){.guide-grid{grid-template-columns:1fr}}
+
+
+/* Perfil e necessidades energéticas — módulo 01 */
+.energy-detail {
+  margin: .9rem 0;
+  padding: .95rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--blue) 6%, var(--surface));
+}
+.energy-detail h3 { margin-top: .05rem; }
+.energy-detail p:last-child { margin-bottom: .1rem; }
+.energy-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#adultEnergyFields {
+  margin: .9rem 0;
+  padding: .2rem .85rem .85rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface-2) 42%, var(--surface));
+}
+#adultEnergyFields h3 { margin-top: .6rem; }
+#adultEnergyFields[hidden] { display: none !important; }
+@media (max-width: 560px) {
+  .energy-metrics { grid-template-columns: 1fr; }
+}
