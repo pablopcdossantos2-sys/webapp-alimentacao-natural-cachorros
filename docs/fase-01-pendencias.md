@@ -108,3 +108,36 @@ Pendências resolvidas permanecem no histórico, com data e evidência. Não con
 - Percentuais de peso corporal, proporções de grupos, limites de vísceras e cronogramas fixos de transição encontrados em alguns materiais não foram adotados como recomendações.
 - A publicação de conteúdo sobre dieta crua foi restrita a uma explicação de risco microbiológico; o escopo do webapp permanece alimentação cozida.
 - O cozimento reduz riscos microbiológicos, mas não demonstra adequação nutricional. Congelamento doméstico não é apresentado como esterilização.
+
+
+## Módulo 01 — perfil e necessidades energéticas (12/11/2026)
+
+- [x] Substituir o fluxo principal da calculadora: agora começa pelo perfil do cão, não por um percentual heurístico do peso convertido em gramas.
+- [x] Registrar peso atual, idade opcional, raça informada, fase/situação, BCS, MCS e número de refeições.
+- [x] Calcular RER pela equação exponencial 70 × peso em kg elevado a 0,75.
+- [x] Para adultos saudáveis, mostrar separadamente os fatores Merck (1,6 castrado; 1,8 inteiro; 1,4 propenso à obesidade) e as referências de atividade FEDIAF 2025 (95, 110, 125 e 150–175 kcal/kg elevado a 0,75).
+- [x] Não somar nem tirar média dos métodos; explicitar que são estimativas iniciais.
+- [x] Para filhotes, idosos, gestação, lactação e condições clínicas, não aplicar fatores de manutenção adulta: mostrar apenas RER como referência de repouso e bloquear sua interpretação como meta diária.
+- [x] Não aplicar multiplicadores por raça, BCS ou MCS; apresentar avisos quando o escore corporal/muscular indicar necessidade de avaliação.
+- [x] Retirar do fluxo principal os antigos resultados de gramas e macronutrientes baseados em participações fixas não validadas. A lógica antiga permanece isolada no módulo de cálculo e nos testes enquanto se decide sua remoção.
+- [x] Atualizar o guia, as referências e o README para refletir o novo escopo.
+- [x] Criar roteiro de evolução para formular refeições caseiras com critérios de segurança.
+- [ ] Fazer inspeção funcional visual em Chromium desktop e mobile, nos temas claro e escuro.
+- [ ] Rodar os workflows do GitHub Actions após a atualização e confirmar os resultados.
+- [ ] Obter revisão de médico-veterinário com competência em nutrição antes de considerar os valores aptos a orientar refeições.
+
+### Interpretação dos cálculos
+
+Para um cão adulto saudável de 5 kg, castrado, com atividade moderada de 1–3 h/dia e baixo impacto:
+- RER = 70 × 5 elevado a 0,75 ≈ 234 kcal/dia.
+- Merck = 1,6 × RER ≈ 375 kcal/dia.
+- FEDIAF 2025 = 110 × 5 elevado a 0,75 ≈ 368 kcal/dia.
+
+A proximidade numérica neste exemplo não torna os métodos equivalentes. Não se calcula média, e a resposta real do cão deve ser acompanhada. A estimativa de kcal também não informa a quantidade ou o equilíbrio nutricional da receita.
+
+### Decisões de segurança
+
+- A equação de filhotes não foi incluída nesta etapa. O crescimento exige cálculo próprio, incluindo idade e peso adulto esperado; não reutilizar fatores de adultos.
+- Idosos, gestantes, lactantes e cães com doenças também aguardam modelos específicos e revisão veterinária.
+- BCS e MCS são dados de avaliação e monitoramento, não botões para aumentar/diminuir calorias automaticamente.
+- O antigo cálculo de gramas por percentual do peso não é mais exibido no fluxo principal e não deve ser reativado como porção alimentar.
