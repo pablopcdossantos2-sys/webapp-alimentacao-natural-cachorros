@@ -1,58 +1,65 @@
-# Prato de Cão — Calculadora educativa de alimentação natural cozida
+# Prato de Cão — apoio à formulação de refeições caseiras
 
-Webapp estático, em português, para estimativas educativas de porções e macronutrientes de alimentos cozidos para cães. Não prescreve dietas, não garante completude nutricional e não substitui médico-veterinário ou veterinário nutrólogo.
+Aplicação estática em HTML, CSS e JavaScript para apoiar, em etapas, o planejamento de refeições caseiras cozidas para cães. O módulo atual registra o perfil do animal e calcula referências iniciais de necessidade energética. Ainda não formula receitas, não calcula nutrientes completos e não deve ser usado como prescrição alimentar.
 
 ## Páginas
 
-- **Calculadora** (`index.html`): estimativas matemáticas de porções e macronutrientes.
-- **Guia educativo** (`guia-alimentacao-natural.html`): fundamentos nutricionais, leitura crítica de alegações sobre benefícios, riscos microbiológicos de alimentos crus, formulação, transição individualizada, preparo seguro e limites da ferramenta.
-- **Referências bibliográficas** (`referencias.html`): fontes organizadas em conformidade com a ABNT NBR 6023:2025.
+- **Calculadora** (index.html): perfil do cão, RER e estimativas energéticas iniciais para adultos saudáveis.
+- **Guia educativo** (guia-alimentacao-natural.html): fundamentos nutricionais, formulação, segurança alimentar e limites da ferramenta.
+- **Referências** (referencias.html): bibliografia de apoio organizada segundo a ABNT NBR 6023:2025.
+- **Roteiro técnico** (docs/roteiro-formulacao-refeicoes-caseiras.md): fases, dependências e critérios para evoluir até o apoio à preparação de refeições caseiras.
 
-## Interface
+## Módulo 01 — perfil e energia
 
-O modo escuro é o padrão inicial. O seletor no cabeçalho alterna entre modo escuro e claro e guarda a preferência localmente para mantê-la entre páginas e visitas no mesmo navegador.
+O formulário registra peso atual, idade, raça informada, fase/situação de vida, escore de condição corporal (BCS), condição muscular (MCS), número de refeições, perfil selecionado para a equação Merck e atividade usada na referência FEDIAF 2025.
 
-## Segurança e limitações
+Para cães adultos saudáveis, são exibidos dois métodos independentes:
 
-Os percentuais, grupos, valores de composição e estimativas de energia da calculadora são heurísticos ou ilustrativos e não foram validados clinicamente. Os dados de composição continuam sem fontes verificadas. Não use os resultados para formular ou fornecer uma dieta sem avaliação individual de médico-veterinário ou veterinário nutrólogo.
+- RER = 70 × peso em kg elevado a 0,75.
+- Merck: RER multiplicado por 1,6 (adulto castrado), 1,8 (adulto inteiro) ou 1,4 (propenso à obesidade).
+- FEDIAF 2025: referência em kcal de energia metabolizável por kg elevado a 0,75, conforme a atividade: 95 (pouca atividade), 110 (moderada/baixo impacto), 125 (moderada/alto impacto) ou 150–175 (muita atividade).
 
-Alimentação natural cozida sem suplementação vitamínico-mineral adequada não deve ser considerada completa. O aplicativo não calcula doses de suplementos. Filhotes, cães com doenças, gestantes/lactantes, neonatos e animais com necessidades clínicas exigem formulação individual. A seleção parcial não representa a porção-alvo diária completa.
+Não se calcula média entre os dois métodos. Os resultados são referências iniciais, não metas clínicas. A condição corporal, a condição muscular e a evolução do peso contextualizam a avaliação, mas não alteram automaticamente os multiplicadores.
 
-Os valores dos ingredientes permanecem marcados com `source: null` e `verified: false`. Não foram inventadas permissões de redistribuição. A frequência e o limite de fígado, assim como a inconsistência de preparo de um ingrediente, continuam pendentes de revisão veterinária.
+Para filhotes, idosos, gestação, lactação e condições clínicas, o módulo mostra apenas o RER como referência de repouso e não estima o MER. Uma formulação específica dessas fases requer lógica própria e revisão veterinária.
+
+## Limites de segurança
+
+- RER não é uma porção diária nem informa a quantidade de alimento.
+- kcal por refeição é apenas a divisão aritmética da referência diária pelo número de refeições.
+- A raça é registrada, mas não recebe multiplicador automático.
+- O sistema não estima peso ideal, não diagnostica condição corporal e não ajusta energia automaticamente por BCS/MCS.
+- Ainda não há cálculo de aminoácidos, ácidos graxos, vitaminas, minerais, fibras, biodisponibilidade, relação cálcio:fósforo ou limites máximos toleráveis.
+- Não são calculadas quantidades em gramas de ingredientes nem doses de suplementos.
+- Os dados de composição de ingredientes existentes no código antigo continuam sem fonte comprovada e não são usados pelo novo fluxo da calculadora.
+
+Uma dieta caseira principal precisa ser formulada individualmente por médico-veterinário com competência em nutrição veterinária. O projeto não deve gerar uma receita alimentar utilizável até que a base de nutrientes, as fontes de composição, as regras de preparo e a validação técnica estejam prontas.
 
 ## Executar localmente
 
-As páginas importam módulos JavaScript. Sirva o diretório por HTTP, em vez de abrir os HTMLs como `file://`. Requer Node.js 22 ou superior para executar testes e verificações.
+As páginas importam módulos JavaScript. Sirva o diretório por HTTP em vez de abrir os HTMLs com o protocolo file. Requer Node.js 22 ou superior para testes e verificações.
 
-```bash
-npm test
-npm run check:contrast
-python -m http.server 8000
-```
+    npm test
+    npm run check:contrast
+    python -m http.server 8000
 
-Acesse `http://localhost:8000`.
+Acesse http://localhost:8000.
 
 ## GitHub Pages
 
-O projeto é compatível com GitHub Pages: é uma aplicação estática em HTML, CSS e JavaScript, sem backend ou etapa de compilação. O workflow `.github/workflows/deploy-pages.yml` executa os testes, prepara as páginas e os módulos necessários e implanta o site a partir de `main`.
-
-**GitHub Pages está ativado e a primeira execução do workflow personalizado foi concluída com sucesso em 31/10/2026.** Os próximos pushes em `main` publicarão automaticamente as páginas.
+O projeto é estático e não precisa de backend nem de etapa de build. O workflow de deploy publica a partir de main após executar as verificações.
 
 Site: https://pablopcdossantos2-sys.github.io/webapp-alimentacao-natural-cachorros/
 
-O site será público. A publicação técnica não significa validação nutricional ou autorização para usar as estimativas como dieta.
+A publicação do site não significa validação nutricional ou autorização para usar os números em decisões alimentares.
 
 ## Verificação e pendências
 
-`npm test` executa os testes com o runner nativo do Node.js. `npm run check:contrast` verifica pares de cores selecionados segundo WCAG AA. A inspeção real em Chromium (desktop/mobile, claro/escuro), axe/Lighthouse e a revisão veterinária permanecem necessárias. Não se deve declarar validação visual ou clínica sem essas evidências.
-
-Consulte `docs/fase-01-pendencias.md` para o histórico, critérios de validação e pendências humanas.
+- npm test: testes automatizados das funções do protótipo e do módulo energético.
+- npm run check:contrast: verificação dos pares de cores selecionados segundo WCAG AA.
+- Ainda são necessárias inspeção visual desktop/mobile, testes de acessibilidade com axe/Lighthouse e revisão veterinária independente.
+- Consulte docs/fase-01-pendencias.md e docs/roteiro-formulacao-refeicoes-caseiras.md.
 
 ## Licença
 
-O código do projeto está sob GNU Affero General Public License v3.0; consulte `LICENSE`. Isso não presume que os valores nutricionais ou eventuais dados de terceiros tenham a mesma licença. A origem, as permissões e a atribuição desses dados continuam pendentes de confirmação.
-
-
-## Materiais de referência do projeto
-
-Os documentos usados na revisão editorial estão preservados em `deposito/usados/`. O inventário, a avaliação crítica e as decisões sobre o que foi ou não incorporado estão em `docs/revisao-materiais-deposito.md`. Materiais de divulgação e revisões narrativas foram tratados como contexto, não como receitas ou comprovação clínica. A revisão veterinária independente do conteúdo continua pendente.
+O código está sob GNU Affero General Public License v3.0 (AGPL-3.0); consulte LICENSE. Isso não presume que os dados de composição ou conteúdos de terceiros tenham a mesma licença. Origem, permissões e atribuição dos dados continuam sujeitas a confirmação.
